@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moed: La Iglesia del Futuro</title>
+    <!-- Google Fonts: Outfit (Display) & Inter (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-cosmic-950 text-slate-100 font-sans antialiased relative min-h-screen">
+    
+    <!-- Background Glows -->
+    <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-spiritual-500/10 blur-[120px] pointer-events-none z-0"></div>
+    <div class="absolute top-[30%] right-[-10%] w-[60%] h-[60%] rounded-full bg-future-500/10 blur-[150px] pointer-events-none z-0"></div>
+    <div class="absolute bottom-[-10%] left-[20%] w-[45%] h-[45%] rounded-full bg-spiritual-500/8 blur-[120px] pointer-events-none z-0"></div>
+
+    <!-- Main Wrapper (Ensures no overflow container issues) -->
+    <div class="relative z-10 flex flex-col min-h-screen">
+      
+      <!-- Floating Navigation Bar -->
+      <header class="sticky top-0 w-full z-50 px-4 py-4 md:px-8">
+        <nav class="max-w-6xl mx-auto backdrop-blur-md bg-cosmic-900/60 border border-white/5 rounded-2xl px-6 py-4 flex items-center justify-between shadow-glass-sm transition-all duration-300">
+          <a href="#" class="font-display font-black text-2xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-indigo-300 flex items-center gap-1.5">
+            MOED<span class="w-2 h-2 rounded-full bg-future-500 animate-pulse"></span>
+          </a>
+          
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+            <a href="#pilares" class="hover:text-future-400 transition-colors duration-200">Pilares</a>
+            <a href="#articulo" class="hover:text-future-400 transition-colors duration-200">Lanzamiento</a>
+            <a href="#comunidad" class="hover:text-future-400 transition-colors duration-200">Comunidad</a>
+            <a href="#sostenimiento" class="hover:text-future-400 transition-colors duration-200">Sostener</a>
+          </div>
+
+          <!-- Mobile Action Button -->
+          <div>
+            <a href="#comunidad" class="text-xs md:text-sm font-semibold bg-white/10 hover:bg-white/15 text-white border border-white/10 px-4 py-2 rounded-xl transition-all duration-300 shadow-sm backdrop-blur-sm">
+              Unirse
+            </a>
+          </div>
+        </nav>
+      </header>
+
+      <!-- Hero Section -->
+      <section class="flex-grow max-w-6xl mx-auto px-6 py-12 md:py-24 text-center flex flex-col items-center justify-center relative">
+        <!-- Badge -->
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wider text-future-400 bg-future-500/10 border border-future-500/20 mb-8 uppercase animate-fade-in">
+          <span class="w-1.5 h-1.5 rounded-full bg-future-400 animate-ping"></span>
+          La Iglesia del Futuro
+        </span>
+
+        <!-- Title -->
+        <h1 class="font-display font-black text-5xl md:text-8xl tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400 mb-6 drop-shadow-sm">
+          MOED
+        </h1>
+
+        <!-- Subtitle / Concept -->
+        <p class="max-w-2xl text-lg md:text-2xl text-slate-300 font-light leading-relaxed mb-10">
+          Descubrí cómo la <span class="text-white font-medium border-b border-spiritual-500/40 pb-0.5">historia bíblica</span> y el <span class="text-white font-medium border-b border-future-400/40 pb-0.5">futuro de la tecnología</span> explican tu presente.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+          <a href="#comunidad" class="w-full sm:w-auto px-8 py-4 rounded-xl text-white font-semibold bg-gradient-to-r from-spiritual-600 to-future-600 hover:from-spiritual-500 hover:to-future-500 transition-all duration-300 shadow-lg shadow-spiritual-500/20 hover:shadow-spiritual-500/30 transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+            <!-- WhatsApp Icon -->
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.456L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.963-1.862-1.862-4.335-2.887-6.97-2.889-5.439 0-9.863 4.37-9.868 9.8-.002 2.01.527 3.974 1.53 5.727l-.955 3.49 3.588-.937zm11.367-7.851c-.29-.145-1.716-.847-1.982-.944-.266-.097-.46-.145-.652.145-.193.29-.748.944-.917 1.137-.169.193-.339.217-.629.072-.29-.145-1.223-.45-2.33-1.437-.861-.767-1.443-1.716-1.612-2.006-.169-.29-.018-.447.127-.591.13-.13.29-.339.435-.508.145-.169.193-.29.29-.484.097-.193.048-.363-.024-.508-.072-.145-.652-1.573-.894-2.153-.236-.569-.475-.491-.652-.5h-.556c-.193 0-.508.072-.774.363-.266.29-1.016.992-1.016 2.419 0 1.427 1.04 2.806 1.185 2.999.145.193 2.046 3.125 4.957 4.38.692.298 1.233.476 1.654.609.695.221 1.328.19 1.828.115.556-.083 1.716-.7 1.958-1.378.242-.677.242-1.258.169-1.378-.072-.119-.266-.193-.556-.339z"/>
+            </svg>
+            Unirse a Comunidad Moed
+          </a>
+          
+          <a href="#articulo" class="w-full sm:w-auto px-8 py-4 rounded-xl text-slate-300 font-semibold bg-white/5 hover:bg-white/10 hover:text-white border border-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-sm shadow-md">
+            Leer artículo de lanzamiento
+          </a>
+        </div>
+      </section>
+
+      <!-- Section Divider Glow -->
+      <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-12"></div>
+
+      <!-- Core Pillars Section -->
+      <section id="pilares" class="max-w-6xl mx-auto px-6 py-16 w-full scroll-mt-24">
+        <div class="text-center mb-16">
+          <h2 class="font-display font-extrabold text-3xl md:text-5xl mb-4 text-white">
+            Tres Dimensiones del Tiempo
+          </h2>
+          <p class="max-w-xl mx-auto text-slate-400 text-base md:text-lg">
+            Nuestra búsqueda espiritual une las raíces eternas de la Escritura con el horizonte tecnológico de los nuevos tiempos.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Pasado Card -->
+          <div class="group relative rounded-2xl bg-gradient-to-b from-white/5 to-white/[0.02] border border-white/5 hover:border-spiritual-500/20 p-8 shadow-glass transition-all duration-500 hover:-translate-y-1 overflow-hidden">
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-spiritual-500/5 group-hover:bg-spiritual-500/10 blur-xl transition-all duration-500"></div>
+            <!-- Icon -->
+            <div class="w-12 h-12 rounded-xl bg-spiritual-500/10 flex items-center justify-center border border-spiritual-500/20 text-spiritual-400 mb-6 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-6 h-6 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <!-- Text -->
+            <h3 class="font-display font-bold text-xl text-white mb-3">El Pasado</h3>
+            <h4 class="text-xs font-semibold tracking-wider text-spiritual-400 uppercase mb-4">Raíces y Revelación</h4>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Exploramos el origen eterno de nuestra fe: las raíces históricas y culturales de la Biblia y la revelación de Jesús a través de los profetas del Antiguo Testamento.
+            </p>
+          </div>
+
+          <!-- Presente Card -->
+          <div class="group relative rounded-2xl bg-gradient-to-b from-white/5 to-white/[0.02] border border-white/5 hover:border-indigo-400/20 p-8 shadow-glass transition-all duration-500 hover:-translate-y-1 overflow-hidden">
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-indigo-500/5 group-hover:bg-indigo-500/10 blur-xl transition-all duration-500"></div>
+            <!-- Icon -->
+            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 text-indigo-400 mb-6 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-6 h-6 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <!-- Text -->
+            <h3 class="font-display font-bold text-xl text-white mb-3">El Presente</h3>
+            <h4 class="text-xs font-semibold tracking-wider text-indigo-400 uppercase mb-4">Respuestas Cotidianas</h4>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Buscamos una espiritualidad viva y aplicable. Ofrecemos herramientas de fe y consuelo para las presiones prácticas, emocionales y morales de la vida diaria en el siglo XXI.
+            </p>
+          </div>
+
+          <!-- Futuro Card -->
+          <div class="group relative rounded-2xl bg-gradient-to-b from-white/5 to-white/[0.02] border border-white/5 hover:border-future-500/20 p-8 shadow-glass transition-all duration-500 hover:-translate-y-1 overflow-hidden">
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-future-500/5 group-hover:bg-future-500/10 blur-xl transition-all duration-500"></div>
+            <!-- Icon -->
+            <div class="w-12 h-12 rounded-xl bg-future-500/10 flex items-center justify-center border border-future-500/20 text-future-400 mb-6 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-6 h-6 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l8.982-11.795H14l1-6.182L6 14.818h5.813z" />
+              </svg>
+            </div>
+            <!-- Text -->
+            <h3 class="font-display font-bold text-xl text-white mb-3">El Futuro</h3>
+            <h4 class="text-xs font-semibold tracking-wider text-future-400 uppercase mb-4">Tecnología y Profecía</h4>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Miramos el mañana sin temor. Analizamos el impacto de la Inteligencia Artificial, la bioética y el transhumanismo bajo la lupa profética y el plan escatológico soberano de Dios.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Divider Glow -->
+      <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-12"></div>
+
+      <!-- Launch Article Section -->
+      <section id="articulo" class="max-w-4xl mx-auto px-6 py-16 w-full scroll-mt-24">
+        <!-- Main Article Container -->
+        <article class="bg-gradient-to-b from-white/5 to-white/[0.02] border border-white/5 rounded-3xl p-6 md:p-12 shadow-glass relative overflow-hidden">
+          
+          <div class="absolute top-0 right-0 w-32 h-32 rounded-full bg-future-500/5 blur-3xl"></div>
+          
+          <!-- Header -->
+          <header class="mb-10 text-center md:text-left border-b border-white/5 pb-8">
+            <span class="inline-block text-xs font-bold uppercase tracking-widest text-future-400 mb-3">Artículo de Lanzamiento</span>
+            <h2 class="font-display font-extrabold text-3xl md:text-5xl text-white tracking-tight leading-tight mb-4">
+              La familia en los tiempos finales
+            </h2>
+            <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-slate-400">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                Lectura: 4 minutos
+              </span>
+              <span>•</span>
+              <span>Por Comunidad Moed</span>
+            </div>
+          </header>
+
+          <!-- Content (Highly readable typography style) -->
+          <div class="prose prose-invert max-w-none text-slate-300 space-y-6 text-base md:text-lg leading-relaxed font-light">
+            <p>
+              Diseñada antes de que existiera cualquier tecnología moderna, la <span class="text-white font-medium">familia es la primera institución del orden divino</span>. Un espacio creado no solo para la supervivencia biológica o la organización social, sino como el reflejo visible del amor invisible de Dios y su modelo de comunión.
+            </p>
+            
+            <p>
+              Sin embargo, nos encontramos hoy ante una encrucijada sin precedentes históricos. El avance vertiginoso de tecnologías como la Inteligencia Artificial de propósito general, la edición genética y la inmersión digital en metaversos está difuminando las fronteras de lo humano. El desafío ya no es meramente moral; es ontológico.
+            </p>
+
+            <blockquote class="border-l-4 border-future-500 bg-white/2 rounded-r-xl p-4 my-6 italic text-slate-200">
+              "El diseño original no cambia con la velocidad de la fibra óptica, pero nuestra capacidad de cuidarlo sí."
+            </blockquote>
+
+            <h3 class="font-display font-semibold text-xl md:text-2xl text-white pt-4">El Diseño Versus el Algoritmo</h3>
+            <p>
+              Los algoritmos de optimización de atención están reemplazando silenciosamente la interacción cara a cara en el hogar. La digitalización excesiva y la pérdida de la presencialidad en los vínculos familiares no son efectos secundarios menores; representan la atomización del núcleo que sostiene la transmisión de la fe de generación en generación.
+            </p>
+
+            <p>
+              En **Moed**, creemos firmemente que la iglesia del futuro no debe rechazar la innovación, sino redimirla. Comprender los desafíos éticos, psicológicos y proféticos de nuestra era nos permite proteger el diseño original de la familia frente a las dinámicas deshumanizantes del transhumanismo contemporáneo.
+            </p>
+          </div>
+
+          <!-- CTA to Whatsapp inside Article -->
+          <div class="mt-12 p-6 rounded-2xl bg-white/2 border border-white/5 text-center">
+            <p class="text-sm text-slate-300 mb-4">¿Querés debatir este artículo con nosotros en tiempo real?</p>
+            <a href="#comunidad" class="inline-flex items-center gap-2 text-sm font-semibold text-future-400 hover:text-future-300 transition-colors duration-200">
+              Unite al debate en el grupo de WhatsApp
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+        </article>
+      </section>
+
+      <!-- Section Divider Glow -->
+      <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-12"></div>
+
+      <!-- WhatsApp Community Section -->
+      <section id="comunidad" class="max-w-5xl mx-auto px-6 py-16 w-full scroll-mt-24">
+        <div class="bg-gradient-to-br from-cosmic-900 to-cosmic-800 border border-white/5 rounded-3xl p-8 md:p-14 shadow-glass relative overflow-hidden">
+          
+          <div class="absolute -left-16 -top-16 w-40 h-40 rounded-full bg-emerald-500/5 blur-3xl"></div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <!-- Information side -->
+            <div class="lg:col-span-7">
+              <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 mb-6 uppercase">
+                Grupo Abierto y Moderado
+              </span>
+              <h2 class="font-display font-extrabold text-3xl md:text-5xl text-white tracking-tight mb-4">
+                Tu espacio de diálogo
+              </h2>
+              <p class="text-slate-300 text-base md:text-lg mb-8 leading-relaxed font-light">
+                Creemos en una comunidad interactiva donde todas las perspectivas sumen. No somos una audiencia pasiva; somos una iglesia en conversación constante.
+              </p>
+
+              <!-- Custom Guidelines List -->
+              <div class="space-y-4 text-sm md:text-base">
+                <h4 class="font-bold text-white uppercase tracking-wider text-xs">Reglas de Convivencia en Moed:</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="flex items-start gap-3">
+                    <div class="mt-1 w-5 h-5 rounded-full bg-emerald-500/15 flex items-center justify-center text-emerald-400 shrink-0">✔</div>
+                    <div>
+                      <strong class="text-white block text-sm">Edificación Mutua</strong>
+                      <span class="text-slate-400 text-xs">Análisis centrado en la fe, la tecnología y el respeto.</span>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3">
+                    <div class="mt-1 w-5 h-5 rounded-full bg-emerald-500/15 flex items-center justify-center text-emerald-400 shrink-0">✔</div>
+                    <div>
+                      <strong class="text-white block text-sm">Respeto Absoluto</strong>
+                      <span class="text-slate-400 text-xs">Cero agresividad frente a las diferentes opiniones teológicas.</span>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3">
+                    <div class="mt-1 w-5 h-5 rounded-full bg-emerald-500/15 flex items-center justify-center text-emerald-400 shrink-0">✔</div>
+                    <div>
+                      <strong class="text-white block text-sm">Cero Spam</strong>
+                      <span class="text-slate-400 text-xs">Prohibida la venta de productos o enlaces externos no autorizados.</span>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3">
+                    <div class="mt-1 w-5 h-5 rounded-full bg-emerald-500/15 flex items-center justify-center text-emerald-400 shrink-0">✔</div>
+                    <div>
+                      <strong class="text-white block text-sm">Canal de Consejería</strong>
+                      <span class="text-slate-400 text-xs">Derivación a chat privado para soporte personal y oración.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CTA side -->
+            <div class="lg:col-span-5 flex flex-col items-center justify-center bg-white/2 rounded-2xl border border-white/5 p-8 text-center backdrop-blur-sm relative">
+              <div class="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-6 border border-emerald-500/20">
+                <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
+                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.456L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.963-1.862-1.862-4.335-2.887-6.97-2.889-5.439 0-9.863 4.37-9.868 9.8-.002 2.01.527 3.974 1.53 5.727l-.955 3.49 3.588-.937zm11.367-7.851c-.29-.145-1.716-.847-1.982-.944-.266-.097-.46-.145-.652.145-.193.29-.748.944-.917 1.137-.169.193-.339.217-.629.072-.29-.145-1.223-.45-2.33-1.437-.861-.767-1.443-1.716-1.612-2.006-.169-.29-.018-.447.127-.591.13-.13.29-.339.435-.508.145-.169.193-.29.29-.484.097-.193.048-.363-.024-.508-.072-.145-.652-1.573-.894-2.153-.236-.569-.475-.491-.652-.5h-.556c-.193 0-.508.072-.774.363-.266.29-1.016.992-1.016 2.419 0 1.427 1.04 2.806 1.185 2.999.145.193 2.046 3.125 4.957 4.38.692.298 1.233.476 1.654.609.695.221 1.328.19 1.828.115.556-.083 1.716-.7 1.958-1.378.242-.677.242-1.258.169-1.378-.072-.119-.266-.193-.556-.339z"/>
+                </svg>
+              </div>
+              <h3 class="font-display font-bold text-lg text-white mb-2">Comunidad Moed</h3>
+              <p class="text-xs text-slate-400 mb-6">Unite gratis al instante y participá de la conversación.</p>
+              
+              <!-- Real invitation link (will use typical WhatsApp open link) -->
+              <a href="https://chat.whatsapp.com/invite/dummy_link" target="_blank" rel="noopener noreferrer" class="w-full py-3 px-6 rounded-xl font-bold bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-500/20 shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 transition-all duration-300 flex items-center justify-center gap-2">
+                Unirme al WhatsApp
+                <svg class="w-4 h-4 fill-none stroke-current" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Section Divider Glow -->
+      <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-12"></div>
+
+      <!-- Sustainability Section -->
+      <section id="sostenimiento" class="max-w-4xl mx-auto px-6 py-16 w-full scroll-mt-24">
+        <div class="bg-gradient-to-b from-white/5 to-white/[0.02] border border-white/5 rounded-3xl p-8 md:p-12 shadow-glass text-center relative overflow-hidden">
+          
+          <div class="absolute -right-16 -top-16 w-40 h-40 rounded-full bg-spiritual-500/5 blur-3xl"></div>
+          
+          <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wider text-spiritual-400 bg-spiritual-500/10 border border-spiritual-500/20 mb-6 uppercase">
+            Sembrar en el Futuro
+          </span>
+
+          <h2 class="font-display font-extrabold text-3xl md:text-5xl text-white tracking-tight mb-4">
+            Sostenimiento del Proyecto
+          </h2>
+
+          <p class="max-w-2xl mx-auto text-slate-300 text-base md:text-lg mb-10 leading-relaxed font-light">
+            **Moed** es una propuesta totalmente abierta e independiente. Tu aporte voluntario nos permite financiar el mantenimiento del espacio digital, la investigación de contenidos y el desarrollo técnico para seguir construyendo la iglesia del futuro.
+          </p>
+
+          <!-- Interactive Donation Box -->
+          <div class="max-w-md mx-auto bg-cosmic-950/60 border border-white/5 rounded-2xl p-6 shadow-inner flex flex-col items-center">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Alias de Mercado Pago</span>
+            
+            <!-- Alias field -->
+            <div class="w-full flex items-center justify-between bg-white/5 border border-white/10 rounded-xl px-4 py-3 mb-6 relative">
+              <span id="aliasText" class="font-mono text-sm md:text-base text-white font-medium select-all">moed.iglesia.mp</span>
+              
+              <button id="copyAliasBtn" class="text-xs font-semibold text-future-400 hover:text-future-300 transition-colors duration-150 flex items-center gap-1.5 pl-2">
+                <svg class="w-4 h-4 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+                <span>Copiar</span>
+              </button>
+
+              <!-- Copied Alert Tooltip -->
+              <span id="copyTooltip" class="absolute right-4 -top-8 px-2 py-1 bg-future-600 text-white text-[10px] rounded shadow-md opacity-0 pointer-events-none transition-all duration-300 transform translate-y-1">
+                ¡Copiado!
+              </span>
+            </div>
+
+            <!-- External Payment Options -->
+            <div class="w-full flex flex-col gap-3">
+              <a href="https://mpago.la/dummy_donation" target="_blank" rel="noopener noreferrer" class="py-3 w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2">
+                Donar $1.000 ARS
+              </a>
+              <a href="https://mpago.la/dummy_donation" target="_blank" rel="noopener noreferrer" class="py-3 w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2">
+                Donar $5.000 ARS
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Footer -->
+      <footer class="mt-auto border-t border-white/5 bg-cosmic-950/80 backdrop-blur-md py-12 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-slate-400">
+          <div>
+            <span class="font-display font-black text-lg tracking-wider text-white">MOED</span>
+            <span class="block text-xs mt-1 text-slate-500">© 2026 Moed. Todos los derechos reservados.</span>
+          </div>
+          
+          <div class="flex gap-8 text-xs">
+            <a href="#pilares" class="hover:text-white transition-colors">Pilares</a>
+            <a href="#articulo" class="hover:text-white transition-colors">Lanzamiento</a>
+            <a href="#comunidad" class="hover:text-white transition-colors">WhatsApp</a>
+            <a href="#sostenimiento" class="hover:text-white transition-colors">Donaciones</a>
+          </div>
+        </div>
+
+        <!-- OBLIGATORY CREDITS LINE - DO NOT REMOVE -->
+        <p class="text-center text-sm text-gray-500 mt-8">Design by Echazu</p>
+      </footer>
+
+    </div>
+
+    <!-- Script Injection -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

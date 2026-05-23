@@ -1,0 +1,18 @@
+{
+  "name": "2026-05-23-moed---la-iglesia-del-futuro",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.0",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^4.3.0",
+    "vite": "^8.0.12"
+  }
+}

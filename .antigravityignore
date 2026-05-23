@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+.antigravity/
+.cursor/
+.vscode/
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.mp4
+.git/
