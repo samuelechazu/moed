@@ -192,9 +192,12 @@ function setupArticleHub() {
     });
   });
 
-  // Wire up Modal Open events (delegated click on "Leer artículo")
+  // Wire up Modal Open events (delegated click on "Leer artículo" or anywhere on the card)
   gridContainer.addEventListener('click', (e) => {
-    const readBtn = e.target.closest('.read-btn');
+    const card = e.target.closest('.article-card');
+    if (!card) return;
+
+    const readBtn = card.querySelector('.read-btn');
     if (!readBtn) return;
 
     const id = readBtn.getAttribute('data-id');
@@ -253,7 +256,7 @@ function setupArticleHub() {
       }
 
       const card = document.createElement('div');
-      card.className = `article-card group relative rounded-2xl bg-gradient-to-b from-white/5 to-white/[0.02] border border-white/5 ${hoverBorder} p-6 md:p-8 shadow-glass transition-all duration-500 hover:-translate-y-1 overflow-hidden flex flex-col`;
+      card.className = `article-card group relative rounded-2xl bg-gradient-to-b from-white/5 to-white/[0.02] border border-white/5 ${hoverBorder} p-6 md:p-8 shadow-glass transition-all duration-500 hover:-translate-y-1 overflow-hidden flex flex-col cursor-pointer`;
       card.setAttribute('data-category', item.category);
 
       card.innerHTML = `
