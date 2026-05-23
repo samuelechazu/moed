@@ -13,9 +13,11 @@
   <body class="bg-cosmic-950 text-slate-100 font-sans antialiased relative min-h-screen">
     
     <!-- Background Glows -->
-    <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-spiritual-500/10 blur-[120px] pointer-events-none z-0"></div>
-    <div class="absolute top-[30%] right-[-10%] w-[60%] h-[60%] rounded-full bg-future-500/10 blur-[150px] pointer-events-none z-0"></div>
-    <div class="absolute bottom-[-10%] left-[20%] w-[45%] h-[45%] rounded-full bg-spiritual-500/8 blur-[120px] pointer-events-none z-0"></div>
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-spiritual-500/10 blur-[120px]"></div>
+      <div class="absolute top-[30%] right-[-10%] w-[60%] h-[60%] rounded-full bg-future-500/10 blur-[150px]"></div>
+      <div class="absolute bottom-[-10%] left-[20%] w-[45%] h-[45%] rounded-full bg-spiritual-500/8 blur-[120px]"></div>
+    </div>
 
     <!-- Main Wrapper (Ensures no overflow container issues) -->
     <div class="relative z-10 flex flex-col min-h-screen">
@@ -35,8 +37,18 @@
             <a href="#sostenimiento" class="hover:text-future-400 transition-colors duration-200">Sostener</a>
           </div>
 
-          <!-- Mobile Action Button -->
-          <div>
+          <!-- Action Buttons / Theme Toggle -->
+          <div class="flex items-center gap-3">
+            <button id="theme-toggle" class="p-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300 cursor-pointer" title="Cambiar Tema (Claro/Oscuro)">
+              <!-- Sun Icon (shown in dark mode) -->
+              <svg id="theme-icon-sun" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+              </svg>
+              <!-- Moon Icon (shown in light mode) -->
+              <svg id="theme-icon-moon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+              </svg>
+            </button>
             <a href="#comunidad" class="text-xs md:text-sm font-semibold bg-white/10 hover:bg-white/15 text-white border border-white/10 px-4 py-2 rounded-xl transition-all duration-300 shadow-sm backdrop-blur-sm">
               Unirse
             </a>
@@ -149,67 +161,46 @@
       <!-- Section Divider Glow -->
       <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-12"></div>
 
-      <!-- Launch Article Section -->
-      <section id="articulo" class="max-w-4xl mx-auto px-6 py-16 w-full scroll-mt-24">
-        <!-- Main Article Container -->
-        <article class="bg-gradient-to-b from-white/5 to-white/[0.02] border border-white/5 rounded-3xl p-6 md:p-12 shadow-glass relative overflow-hidden">
-          
-          <div class="absolute top-0 right-0 w-32 h-32 rounded-full bg-future-500/5 blur-3xl"></div>
-          
-          <!-- Header -->
-          <header class="mb-10 text-center md:text-left border-b border-white/5 pb-8">
-            <span class="inline-block text-xs font-bold uppercase tracking-widest text-future-400 mb-3">Artículo de Lanzamiento</span>
-            <h2 class="font-display font-extrabold text-3xl md:text-5xl text-white tracking-tight leading-tight mb-4">
-              La familia en los tiempos finales
-            </h2>
-            <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-slate-400">
-              <span class="flex items-center gap-1.5">
-                <svg class="w-4 h-4 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-                Lectura: 4 minutos
-              </span>
-              <span>•</span>
-              <span>Por Comunidad Moed</span>
-            </div>
-          </header>
+      <!-- Research Hub Section -->
+      <section id="articulo" class="max-w-6xl mx-auto px-6 py-16 w-full scroll-mt-24">
+        <div class="text-center mb-12">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wider text-future-400 bg-future-500/10 border border-future-500/20 mb-4 uppercase">
+            Portal de Investigación Moed
+          </span>
+          <h2 class="font-display font-extrabold text-3xl md:text-5xl mb-4 text-white">
+            Bitácora de Sabiduría
+          </h2>
+          <p class="max-w-xl mx-auto text-slate-400 text-base md:text-lg">
+            Exploramos el hilo eterno que conecta las profecías del pasado, las respuestas prácticas del presente y los retos tecnológicos del futuro.
+          </p>
+        </div>
 
-          <!-- Content (Highly readable typography style) -->
-          <div class="prose prose-invert max-w-none text-slate-300 space-y-6 text-base md:text-lg leading-relaxed font-light">
-            <p>
-              Diseñada antes de que existiera cualquier tecnología moderna, la <span class="text-white font-medium">familia es la primera institución del orden divino</span>. Un espacio creado no solo para la supervivencia biológica o la organización social, sino como el reflejo visible del amor invisible de Dios y su modelo de comunión.
-            </p>
-            
-            <p>
-              Sin embargo, nos encontramos hoy ante una encrucijada sin precedentes históricos. El avance vertiginoso de tecnologías como la Inteligencia Artificial de propósito general, la edición genética y la inmersión digital en metaversos está difuminando las fronteras de lo humano. El desafío ya no es meramente moral; es ontológico.
-            </p>
-
-            <blockquote class="border-l-4 border-future-500 bg-white/2 rounded-r-xl p-4 my-6 italic text-slate-200">
-              "El diseño original no cambia con la velocidad de la fibra óptica, pero nuestra capacidad de cuidarlo sí."
-            </blockquote>
-
-            <h3 class="font-display font-semibold text-xl md:text-2xl text-white pt-4">El Diseño Versus el Algoritmo</h3>
-            <p>
-              Los algoritmos de optimización de atención están reemplazando silenciosamente la interacción cara a cara en el hogar. La digitalización excesiva y la pérdida de la presencialidad en los vínculos familiares no son efectos secundarios menores; representan la atomización del núcleo que sostiene la transmisión de la fe de generación en generación.
-            </p>
-
-            <p>
-              En **Moed**, creemos firmemente que la iglesia del futuro no debe rechazar la innovación, sino redimirla. Comprender los desafíos éticos, psicológicos y proféticos de nuestra era nos permite proteger el diseño original de la familia frente a las dinámicas deshumanizantes del transhumanismo contemporáneo.
-            </p>
+        <!-- Glassmorphic Category Filter Tabs -->
+        <div class="flex items-center justify-center mb-12 px-2">
+          <div class="flex bg-white/2 backdrop-blur-md border border-white/5 rounded-2xl p-1.5 gap-2 max-w-full overflow-x-auto">
+            <button class="filter-btn active px-5 py-2.5 rounded-xl text-xs md:text-sm font-semibold transition-all duration-300 bg-white/10 text-white shadow-sm border border-white/5" data-filter="all">
+              Todos
+            </button>
+            <button class="filter-btn px-5 py-2.5 rounded-xl text-xs md:text-sm font-semibold transition-all duration-300 text-slate-400 hover:text-white border border-transparent" data-filter="pasado">
+              El Pasado
+            </button>
+            <button class="filter-btn px-5 py-2.5 rounded-xl text-xs md:text-sm font-semibold transition-all duration-300 text-slate-400 hover:text-white border border-transparent" data-filter="presente">
+              El Presente
+            </button>
+            <button class="filter-btn px-5 py-2.5 rounded-xl text-xs md:text-sm font-semibold transition-all duration-300 text-slate-400 hover:text-white border border-transparent" data-filter="futuro">
+              El Futuro
+            </button>
           </div>
+        </div>
 
-          <!-- CTA to Whatsapp inside Article -->
-          <div class="mt-12 p-6 rounded-2xl bg-white/2 border border-white/5 text-center">
-            <p class="text-sm text-slate-300 mb-4">¿Querés debatir este artículo con nosotros en tiempo real?</p>
-            <a href="#comunidad" class="inline-flex items-center gap-2 text-sm font-semibold text-future-400 hover:text-future-300 transition-colors duration-200">
-              Unite al debate en el grupo de WhatsApp
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
+        <!-- Dynamic Grid of Articles Previews -->
+        <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8 min-h-[300px]">
+          <!-- Loader or Dynamic Previews will be injected here by Javascript -->
+          <div class="col-span-full flex flex-col items-center justify-center py-16 text-slate-500">
+            <div class="w-8 h-8 rounded-full border-2 border-slate-500/20 border-t-future-500 animate-spin mb-4"></div>
+            <span class="text-sm font-medium tracking-wide">Cargando bitácoras...</span>
           </div>
-
-        </article>
+        </div>
       </section>
 
       <!-- Section Divider Glow -->
@@ -349,7 +340,7 @@
       </section>
 
       <!-- Main Footer -->
-      <footer class="mt-auto border-t border-white/5 bg-cosmic-950/80 backdrop-blur-md py-12 px-6">
+      <footer class="mt-auto border-t border-white/5 bg-cosmic-950/80 backdrop-blur-md pt-12 pb-10 px-6">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-slate-400">
           <div>
             <span class="font-display font-black text-lg tracking-wider text-white">MOED</span>
@@ -365,9 +356,31 @@
         </div>
 
         <!-- OBLIGATORY CREDITS LINE - DO NOT REMOVE -->
-        <p class="text-center text-sm text-gray-500 mt-8">Design by Echazu</p>
+        <p class="text-center text-sm text-gray-500 mt-8">
+          Design by Echazu 
+          <span class="mx-2 text-white/10">•</span> 
+          <a href="/editor.html" class="hover:text-future-400 transition-colors duration-200">Redactar Artículo</a>
+        </p>
       </footer>
 
+    </div>
+
+    <!-- Lector Inmersivo Modal (Distraction-Free) -->
+    <div id="article-reader-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 opacity-0 pointer-events-none transition-all duration-300 backdrop-blur-2xl bg-cosmic-950/80">
+      <div class="relative w-full max-w-4xl bg-gradient-to-b from-cosmic-900 to-cosmic-950 border border-white/5 rounded-3xl p-6 md:p-12 shadow-glass max-h-[90vh] overflow-y-auto transform scale-95 transition-all duration-300">
+        
+        <!-- Floating Close Button -->
+        <button id="close-reader-btn" class="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 flex items-center justify-center transition-all duration-200" title="Cerrar (Esc)">
+          <svg class="w-5 h-5 fill-none stroke-current" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <!-- Dynamic Reading Content Container -->
+        <article id="modal-article-content" class="w-full">
+          <!-- Injected dynamically by main.js -->
+        </article>
+      </div>
     </div>
 
     <!-- Script Injection -->
