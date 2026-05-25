@@ -6,7 +6,7 @@ category: "pasado"
 coverImage: "/images/portada-ia.jpg"
 teaser: "Mucho antes del diablo medieval, las Escrituras revelaban a un acusador que operaba bajo la sombra del Trono."
 ---
-+++En la imaginación occidental moderna, “Satanás” suele aparecer como una caricatura: un demonio rojo, un enemigo absoluto de Dios, un rey infernal que gobierna desde las sombras con autonomía propia. Pero cuando las Escrituras son leídas desde sus raíces hebreas, lejos de las interpretaciones medievales y de la estética del miedo religioso, emerge una figura mucho más compleja, profunda y perturbadora.
+En la imaginación occidental moderna, “Satanás” suele aparecer como una caricatura: un demonio rojo, un enemigo absoluto de Dios, un rey infernal que gobierna desde las sombras con autonomía propia. Pero cuando las Escrituras son leídas desde sus raíces hebreas, lejos de las interpretaciones medievales y de la estética del miedo religioso, emerge una figura mucho más compleja, profunda y perturbadora.
 La Biblia no presenta inicialmente a “Satán” como un nombre propio. El término hebreo **הַשָּׂטָן — HaSatán** significa literalmente: **“el adversario”, “el acusador” o “el fiscal”**.
 Y eso cambia todo.
 Porque el misterio de HaSatán no comienza en el infierno.
