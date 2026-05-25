@@ -3,9 +3,11 @@ title: "Cuando el Amor se Enfría: Las Familias en la Hora Final"
 author: "Comunidad Moed"
 date: "2026-05-23"
 category: "futuro"
-readTime: "2 min"
 coverImage: "/images/portada-ia.jpg"
-teaser: "En una era de pantallas, orgullo y frialdad emocional, la restauración del hogar se vuelve un acto profético."<br><br>Vivimos una paradoja inquietante.
+teaser: "En una era de pantallas, orgullo y frialdad emocional, la restauración del hogar se vuelve un acto profético."
+---
+
+Vivimos una paradoja inquietante.
 La humanidad alcanzó niveles de conexión jamás imaginados:<br>mensajes instantáneos, videollamadas globales, inteligencia artificial conversacional, redes que atraviesan continentes en segundos.
 Y, sin embargo, nunca hubo tantas personas emocionalmente solas.
 Las casas están llenas de dispositivos… pero vacías de presencia.<br>Las conversaciones abundan… pero escasea la comunión.<br>El ruido crece… mientras el alma se apaga lentamente.

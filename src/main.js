@@ -49,12 +49,18 @@ function formatSpanishDate(dateStr) {
 const rawArticles = import.meta.glob('/src/articles/*.md', { query: '?raw', eager: true });
 
 // Build the articles array dynamically by extracting metadata from Frontmatter
-const articles = Object.entries(rawArticles).map(([filePath, module]) => {
+let articles = Object.entries(rawArticles).map(([filePath, module]) => {
   const fileName = filePath.split('/').pop();
   const id = fileName.replace('.md', '');
   const rawText = module.default;
   
   const parsed = parseYAML(rawText);
+  
+  // Auto calculate readTime dynamically at runtime
+  const cleanContent = parsed.content.trim();
+  const words = cleanContent.split(/\s+/).filter(w => w.length > 0);
+  const minutes = Math.max(1, Math.ceil(words.length / 200));
+  const calculatedReadTime = `${minutes} min`;
   
   return {
     id,
@@ -62,8 +68,8 @@ const articles = Object.entries(rawArticles).map(([filePath, module]) => {
     author: parsed.metadata.author || 'Comunidad Moed',
     date: parsed.metadata.date || '23 de Mayo, 2026',
     category: parsed.metadata.category || 'futuro',
-    readTime: parsed.metadata.readTime || '5 min',
-    coverImage: parsed.metadata.coverImage || '/images/portada-ia.png',
+    readTime: calculatedReadTime,
+    coverImage: parsed.metadata.coverImage || '/images/portada-ia.jpg',
     teaser: parsed.metadata.teaser || 'Resumen introductorio...',
     rawContent: rawText // Kept in memory for instant 0ms reader opening
   };
@@ -161,10 +167,7 @@ function setupAliasCopy() {
   });
 }
 
-/**
- * Manages the Moed Research & Reflection Hub
- */
-function setupArticleHub() {
+async function setupArticleHub() {
   const gridContainer = document.getElementById('articles-grid');
   const filterBtns = document.querySelectorAll('.filter-btn');
   const readerModal = document.getElementById('article-reader-modal');
@@ -172,6 +175,39 @@ function setupArticleHub() {
   const closeBtn = document.getElementById('close-reader-btn');
 
   if (!gridContainer || !readerModal || !modalContent || !closeBtn) return;
+
+  // Dynamically fetch the latest articles on local development in real-time
+  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+    try {
+      const response = await fetch('/api/articles');
+      if (response.ok) {
+        const rawList = await response.json();
+        articles = rawList.map(item => {
+          const id = item.filename.replace('.md', '');
+          const parsed = parseYAML(item.content);
+          
+          const cleanContent = parsed.content.trim();
+          const words = cleanContent.split(/\s+/).filter(w => w.length > 0);
+          const minutes = Math.max(1, Math.ceil(words.length / 200));
+          const calculatedReadTime = `${minutes} min`;
+          
+          return {
+            id,
+            title: parsed.metadata.title || 'Artículo de Moed',
+            author: parsed.metadata.author || 'Comunidad Moed',
+            date: parsed.metadata.date || '23 de Mayo, 2026',
+            category: parsed.metadata.category || 'futuro',
+            readTime: calculatedReadTime,
+            coverImage: parsed.metadata.coverImage || '/images/portada-ia.jpg',
+            teaser: parsed.metadata.teaser || 'Resumen introductorio...',
+            rawContent: item.content
+          };
+        });
+      }
+    } catch (err) {
+      console.warn('Error fetching dynamic articles from API:', err);
+    }
+  }
 
   // Render initial cards grilla
   renderArticleCards(articles);
@@ -419,7 +455,15 @@ function setupArticleHub() {
     if (inList) flushList();
 
     // 3. Prepend beautiful header layout
+    const coverHtml = metadata.coverImage ? `
+      <div class="w-full h-48 md:h-64 rounded-2xl overflow-hidden mb-6 border border-white/10 shadow-lg relative">
+        <img src="${metadata.coverImage}" alt="${metadata.title}" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"></div>
+      </div>
+    ` : '';
+
     const headerHtml = `
+      ${coverHtml}
       <header class="mb-8 border-b border-white/5 pb-6 text-center md:text-left pr-8">
         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wider ${
           metadata.category === 'pasado'

@@ -3,7 +3,6 @@ title: "La familia en los tiempos finales"
 author: "Comunidad Moed"
 date: "23 de Mayo, 2026"
 category: "presente"
-readTime: "2 min"
 coverImage: "/images/portada-familia.jpg"
 teaser: "Un análisis del diseño original de la familia frente a las dinámicas deshumanizantes y la digitalización excesiva contemporánea."
 ---

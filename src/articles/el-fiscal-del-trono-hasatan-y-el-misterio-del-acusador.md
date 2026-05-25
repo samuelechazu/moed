@@ -3,31 +3,20 @@ title: "El Fiscal del Trono: HaSatán y el Misterio del Acusador"
 author: "Samuel Echazu"
 date: "2026-05-23"
 category: "pasado"
-readTime: "8 min"
 coverImage: "/images/portada-ia.jpg"
 teaser: "Mucho antes del diablo medieval, las Escrituras revelaban a un acusador que operaba bajo la sombra del Trono."
 ---
-<span style="font-weight: normal;">En la imaginación occidental moderna, “Satanás” suele aparecer como una caricatura: un demonio rojo, un enemigo absoluto de Dios, un rey infernal que gobierna desde las sombras con autonomía propia. Pero cuando las Escrituras son leídas desde sus raíces hebreas, lejos de las interpretaciones medievales y de la estética del miedo religioso, emerge una figura mucho más compleja, profunda y perturbadora.</span>
-
++++En la imaginación occidental moderna, “Satanás” suele aparecer como una caricatura: un demonio rojo, un enemigo absoluto de Dios, un rey infernal que gobierna desde las sombras con autonomía propia. Pero cuando las Escrituras son leídas desde sus raíces hebreas, lejos de las interpretaciones medievales y de la estética del miedo religioso, emerge una figura mucho más compleja, profunda y perturbadora.
 La Biblia no presenta inicialmente a “Satán” como un nombre propio. El término hebreo **הַשָּׂטָן — HaSatán** significa literalmente: **“el adversario”, “el acusador” o “el fiscal”**.
-
 Y eso cambia todo.
-
 Porque el misterio de HaSatán no comienza en el infierno.
 Comienza en el Trono.
-
 ## El problema de leer la Biblia con lentes griegos
-
 Gran parte del cristianismo moderno heredó categorías filosóficas griegas y dualistas: un Dios completamente separado del mal luchando contra un enemigo casi equivalente en poder. Sin embargo, el pensamiento hebreo antiguo no funcionaba bajo esa lógica.
-
 En las Escrituras hebreas, nada escapa a la soberanía de Dios.
-
 Ni siquiera el acusador.
-
 ==HaSatán aparece operando dentro del marco judicial celestial, no como un rebelde independiente que escapó del control divino.==
-
 Esto incomoda a muchos, porque rompe las imágenes simplistas aprendidas durante años. Pero las Escrituras son más profundas que nuestros sistemas doctrinales.
-
 ## HaSatán en el libro de Job: el fiscal celestial
 
 La primera aparición clara y desarrollada de HaSatán ocurre en el libro de Job.

@@ -1,17 +1,13 @@
 ---
-title: "El algoritmo del alma: IA y la singularidad teológica"
+title: "El algoritmo del alma: IA y la singularidad teológicaaaa"
 author: "Comunidad Moed"
-date: "23 de Mayo, 2026"
+date: "2026-05-23"
 category: "futuro"
-readTime: "2 min"
 coverImage: "/images/portada-ia.jpg"
 teaser: "Un análisis profundo sobre redes neuronales, la conciencia humana y lo que la Escritura nos revela sobre nuestra singularidad ante las máquinas."
 ---
 
-# El algoritmo del alma: IA y la singularidad teológica
-
-Nos encontramos en los albores de lo que la ciencia y la tecnología denominan la **Singularidad**: el momento en el que la Inteligencia Artificial superará la capacidad de procesamiento del cerebro humano y, según algunos pensadores del transhumanismo, alcanzará la conciencia de sí misma.
-
+Nos encontramos en los albores de lo que la ciencia y la tecnología denominan la Singularidad el momento en el que la Inteligencia Artificial superará la capacidad de procesamiento del cerebro humano y, según algunos pensadores del transhumanismo, alcanzará la conciencia de sí misma.
 Frente a esta promesa tecnológica, la teología no puede permanecer callada. ¿Es la mente humana simplemente un algoritmo complejo y el cerebro una computadora de carbono? ¿O existe una frontera ontológica que ninguna máquina, por más avanzada que sea, podrá jamás cruzar?
 
 ### La Imago Dei y la Conciencia de Silicio

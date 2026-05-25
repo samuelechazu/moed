@@ -1,17 +1,14 @@
 ---
-title: "El Shabat en la era del scroll infinito"
+title: "El Shabat en la era del scroll infinitooo"
 author: "Comunidad Moed"
-date: "23 de Mayo, 2026"
+date: "2026-05-23"
 category: "pasado"
-readTime: "2 min"
 coverImage: "/images/portada-shabat.jpg"
 teaser: "Raíces antiguas para desintoxicar la adicción digital y encontrar reposo espiritual ante el burnout tecnológico contemporáneo."
 ---
-
-# El Shabat en la era del scroll infinito
+# Desintoxicación Digital e Identidad Sagrada
 
 Vivimos en un estado de **hiperconectividad perpetua**. Los teléfonos móviles y las redes sociales han sido diseñados específicamente para capitalizar nuestra atención mediante la dopamina de las notificaciones, los "likes" y el scroll infinito. Esta fatiga digital o *burnout* constante no es solo un reto de salud mental; es una crisis del alma...
-
 ¿Podrá el ser humano encontrar paz espiritual en medio de una red de datos incesante? La respuesta divina a esta crisis contemporánea no es una nueva app de meditación, sino una institución milenaria y soberana: **el Shabat**.
 
 ### Desintoxicación Digital e Identidad Sagrada
