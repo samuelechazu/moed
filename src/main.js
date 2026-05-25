@@ -68,12 +68,13 @@ let articles = Object.entries(rawArticles).map(([filePath, module]) => {
     author: parsed.metadata.author || 'Comunidad Moed',
     date: parsed.metadata.date || '23 de Mayo, 2026',
     category: parsed.metadata.category || 'futuro',
+    published: parsed.metadata.published || 'true',
     readTime: calculatedReadTime,
     coverImage: parsed.metadata.coverImage || '/images/portada-ia.jpg',
     teaser: parsed.metadata.teaser || 'Resumen introductorio...',
     rawContent: rawText // Kept in memory for instant 0ms reader opening
   };
-});
+}).filter(a => String(a.published) !== 'false');
 
 // Wait for DOM to load completely
 document.addEventListener('DOMContentLoaded', () => {
@@ -197,12 +198,13 @@ async function setupArticleHub() {
             author: parsed.metadata.author || 'Comunidad Moed',
             date: parsed.metadata.date || '23 de Mayo, 2026',
             category: parsed.metadata.category || 'futuro',
+            published: parsed.metadata.published || 'true',
             readTime: calculatedReadTime,
             coverImage: parsed.metadata.coverImage || '/images/portada-ia.jpg',
             teaser: parsed.metadata.teaser || 'Resumen introductorio...',
             rawContent: item.content
           };
-        });
+        }).filter(a => String(a.published) !== 'false');
       }
     } catch (err) {
       console.warn('Error fetching dynamic articles from API:', err);

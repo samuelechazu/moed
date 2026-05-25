@@ -38,13 +38,21 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
           <span class="btn-label">Nuevo</span>
         </button>
-        <button class="action-btn" id="btn-open" title="Abrir archivo .md o .txt">
+        <button class="action-btn" id="btn-open" title="Abrir (Local/Nube)">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16a1 1 0 0 0 1-1V8H3v10a1 1 0 0 0 1 1z"/><path d="M9 8V5l3-3 3 3v3"/></svg>
           <span class="btn-label">Abrir</span>
         </button>
         <button class="action-btn" id="btn-save" title="Guardar (Ctrl+S)">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
           <span class="btn-label">Guardar</span>
+        </button>
+        <button class="action-btn" id="btn-export" title="Exportar .md local">
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke: #38bdf8;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          <span class="btn-label">Exportar</span>
+        </button>
+        <button class="action-btn" id="btn-publish" title="Publicar en Vercel (GitHub)" style="border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); color: #34d399;">
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke: currentColor;"><path d="M12 2v20M17 5l-5-5-5 5M2 17h20"/></svg>
+          <span class="btn-label" style="font-weight: 600;">Publicar</span>
         </button>
       </div>
 
@@ -170,6 +178,13 @@
         </select>
       </div>
       <div class="panel-field">
+        <span class="field-label">Estado de Publicación</span>
+        <select id="meta-published" class="field-input">
+          <option value="true">🟢 Publicado (Visible en la Web)</option>
+          <option value="false">🟡 Borrador (Oculto al Público)</option>
+        </select>
+      </div>
+      <div class="panel-field">
         <span class="field-label">Ruta de Portada (coverImage)</span>
         <input type="text" id="meta-cover" class="field-input" placeholder="Ej: /images/portada-ia.jpg">
       </div>
@@ -218,6 +233,7 @@
         <button class="ai-tab-btn active" data-tab="prompt">1. Crear Prompt</button>
         <button class="ai-tab-btn" data-tab="import">2. Importar MD</button>
         <button class="ai-tab-btn" data-tab="direct">3. Auto-Redacción (API)</button>
+        <button class="ai-tab-btn" data-tab="github">4. Conectar GitHub</button>
       </div>
 
       <!-- Tab Content: Prompt Builder -->
@@ -300,6 +316,51 @@
         </div>
       </div>
 
+      <!-- Tab Content: Connect GitHub -->
+      <div id="ai-tab-github" class="ai-tab-content hidden" style="display: flex; flex-direction: column; gap: 16px;">
+        <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">
+          Conecta tu editor directamente con tu repositorio de GitHub para poder cargar y publicar artículos en vivo en Vercel. Las credenciales se guardan de forma 100% segura únicamente en tu navegador.
+        </p>
+        <div class="panel-field">
+          <span class="field-label">GitHub Personal Access Token (PAT)</span>
+          <input type="password" id="ai-github-token" class="field-input" placeholder="ghp_xxxxxxxxxxxx">
+          <p style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">El token requiere permisos de lectura y escritura de contenidos (`contents: write`).</p>
+        </div>
+        <div class="panel-field">
+          <span class="field-label">Repositorio de GitHub</span>
+          <input type="text" id="ai-github-repo" class="field-input" placeholder="usuario/repositorio" value="samuelechazu/moed">
+        </div>
+        <button id="btn-save-github" class="action-btn" style="width: 100%; padding: 12px; background: #10B981; color: #FFF; border: none; font-weight: 700; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-sans);">
+          ✔ Guardar Conexión de GitHub
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Open Cloud File Modal -->
+  <div id="cloud-open-modal" style="position: fixed; inset: 0; z-index: 260; display: none; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); background: rgba(3, 5, 11, 0.75);">
+    <div class="modal-card" style="width: 100%; max-width: 480px; background: rgba(7, 10, 19, 0.95); border: 1px solid rgba(168, 85, 247, 0.25); border-radius: 20px; padding: 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.8), 0 0 32px rgba(168, 85, 247, 0.1); display: flex; flex-direction: column; gap: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">
+        <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 15px; color: #FFF; margin: 0; display: flex; align-items: center; gap: 8px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" style="width:18px;height:18px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Abrir Artículo desde la Nube
+        </h3>
+        <button id="btn-close-cloud-open" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; display: flex; align-items: center; justify-content: center;" title="Cerrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button id="btn-open-local-fallback" class="action-btn" style="flex: 1; justify-content: center; gap: 6px;">
+          <svg viewBox="0 0 24 24" style="stroke: var(--accent-spiritual);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M12 15V3M7 10l5 5 5-5"/></svg>
+          Abrir Archivo Local de tu PC
+        </button>
+      </div>
+      <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-top: 4px;">Artículos en GitHub:</div>
+      <div id="cloud-files-list" style="max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px;">
+        <!-- Dynamic list of files will be injected here -->
+        <div style="color: var(--text-muted); font-size: 12px; text-align: center; padding: 20px 0;">Cargando lista de artículos...</div>
+      </div>
     </div>
   </div>
 

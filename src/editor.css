@@ -45,6 +45,9 @@ body.drag-active { border-color: var(--accent-future); }
 body.drag-invalid { border-color: #EF4444; }
 
 #top-navbar {
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
   background: var(--bg-toolbar);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -73,6 +76,9 @@ body.drag-invalid { border-color: #EF4444; }
 }
 
 #formatting-bar {
+  position: sticky;
+  top: 49px;
+  flex-shrink: 0;
   background: rgba(7, 10, 19, 0.5);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -959,6 +965,16 @@ body.light-mode .exit-btn:hover {
   .formatting-container .button-group {
     flex-shrink: 0;
   }
+}
+
+/* Hide frontmatter panel in raw code source mode to avoid redundancy */
+body.state-source #frontmatter-panel {
+  max-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom-width: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 

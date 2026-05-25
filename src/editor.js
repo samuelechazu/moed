@@ -4,6 +4,7 @@ let isDirty = false;
 let isParsingLock = false;
 let pendingFileReference = null;
 let activeScrollDriver = null;
+let currentFileSha = null; // Git unique file signature for cloud edits
 
 let historyStates = [];
 let historyIndex = -1;
@@ -18,6 +19,7 @@ let frontmatterData = {
   author: 'Comunidad Moed',
   date: '2026-05-23',
   category: 'futuro',
+  published: 'false',
   coverImage: '/images/portada-ia.jpg',
   teaser: 'Breve resumen introductorio para captar la atención del lector en la grilla...'
 };
@@ -539,6 +541,7 @@ function parseYAMLFrontmatter(mdText) {
     author: 'Comunidad Moed',
     date: '2026-05-23',
     category: 'futuro',
+    published: 'true',
     coverImage: '/images/portada-ia.jpg',
     teaser: 'Breve resumen introductorio para la grilla...'
   };
@@ -563,7 +566,7 @@ function parseYAMLFrontmatter(mdText) {
         }
         value = value.replace(/\\"/g, '"').replace(/\\\\/g, '\\');
         
-        if (key in metadata || ['title', 'author', 'date', 'category', 'coverImage', 'teaser'].includes(key)) {
+        if (key in metadata || ['title', 'author', 'date', 'category', 'published', 'coverImage', 'teaser'].includes(key)) {
           metadata[key] = value;
         }
       }
@@ -580,14 +583,7 @@ function calculateReadTime(text) {
   return `${minutes} min`;
 }
 
-function getTodayISODate() {
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
-  const dd = String(today.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-}
-
+// Format date back to ISO standard
 function parseStringToISO(str) {
   if (!str) return getTodayISODate();
   if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
@@ -608,6 +604,14 @@ function parseStringToISO(str) {
   } catch (e) {}
   
   return getTodayISODate();
+}
+
+function getTodayISODate() {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 function slugify(text) {
@@ -634,6 +638,7 @@ function generateYAMLFrontmatter() {
          `author: "${escapeYamlString(frontmatterData.author)}"\n` +
          `date: "${frontmatterData.date}"\n` +
          `category: "${frontmatterData.category}"\n` +
+         `published: ${frontmatterData.published || 'true'}\n` +
          `coverImage: "${escapeYamlString(frontmatterData.coverImage)}"\n` +
          `teaser: "${escapeYamlString(frontmatterData.teaser)}"\n` +
          `---\n`;
@@ -644,6 +649,7 @@ function syncFrontmatterFieldsToInputs() {
   document.getElementById('meta-author').value = frontmatterData.author;
   document.getElementById('meta-date').value = parseStringToISO(frontmatterData.date);
   document.getElementById('meta-category').value = frontmatterData.category;
+  document.getElementById('meta-published').value = String(frontmatterData.published || 'true');
   document.getElementById('meta-cover').value = frontmatterData.coverImage;
   document.getElementById('meta-teaser').value = frontmatterData.teaser;
 }
@@ -653,6 +659,7 @@ function syncInputsToFrontmatterFields() {
   frontmatterData.author = document.getElementById('meta-author').value.trim() || 'Comunidad Moed';
   frontmatterData.date = document.getElementById('meta-date').value || getTodayISODate();
   frontmatterData.category = document.getElementById('meta-category').value;
+  frontmatterData.published = document.getElementById('meta-published').value;
   frontmatterData.coverImage = document.getElementById('meta-cover').value.trim() || '/images/portada-ia.jpg';
   frontmatterData.teaser = document.getElementById('meta-teaser').value.trim() || 'Breve resumen introductorio...';
 }
@@ -675,7 +682,7 @@ document.getElementById('btn-frontmatter').addEventListener('click', () => {
 });
 
 // Wire up inputs event to sync back on change
-['meta-title', 'meta-author', 'meta-date', 'meta-category', 'meta-cover', 'meta-teaser'].forEach(id => {
+['meta-title', 'meta-author', 'meta-date', 'meta-category', 'meta-published', 'meta-cover', 'meta-teaser'].forEach(id => {
   document.getElementById(id).addEventListener('input', () => {
     syncInputsToFrontmatterFields();
     markModified();
@@ -1106,6 +1113,7 @@ function resetDocument(content, name) {
   sourceEditor.value = content;
   fileDisplayName = name || 'articulo-nuevo.md';
   fileSystemHandle = null;
+  currentFileSha = null; // Clear cloud signature
   isDirty = false;
   
   const parsed = parseYAMLFrontmatter(content);
@@ -1129,6 +1137,7 @@ document.getElementById('btn-new').addEventListener('click', () => {
     author: 'Comunidad Moed',
     date: '23 de Mayo, 2026',
     category: 'futuro',
+    published: 'false',
     coverImage: '/images/portada-ia.jpg',
     teaser: 'Breve resumen introductorio para la grilla...'
   };
@@ -1138,6 +1147,18 @@ document.getElementById('btn-new').addEventListener('click', () => {
 });
 
 async function openFile() {
+  const token = localStorage.getItem('moed_github_token');
+  const repo = localStorage.getItem('moed_github_repo');
+  
+  if (token && repo) {
+    showCloudOpenModal(token, repo);
+    return;
+  }
+  
+  triggerLocalFilePicker();
+}
+
+async function triggerLocalFilePicker() {
   if (window.showOpenFilePicker) {
     try {
       const [handle] = await window.showOpenFilePicker({
@@ -1146,6 +1167,7 @@ async function openFile() {
       });
       const file = await handle.getFile();
       pendingFileReference = file;
+      currentFileSha = null; // Clear cloud signature
       if (isDirty) {
         window._pendingFsHandle = handle;
         safetyHud.classList.add('visible');
@@ -1318,6 +1340,7 @@ function commitFile(fsHandle) {
     sourceEditor.value = e.target.result;
     fileDisplayName = pendingFileReference.name;
     fileSystemHandle = isWritableHandle(handle) ? handle : null;
+    currentFileSha = null; // Clear cloud signature for local edits
     isDirty = false;
     
     // Parse frontmatter
@@ -1750,3 +1773,267 @@ sourceEditor.addEventListener('input', () => {
 
 // Initial run
 updateTextStatistics();
+
+// =========================================================================
+// Cloud CMS (GitHub API) & Export Services
+// =========================================================================
+
+async function showCloudOpenModal(token, repo) {
+  const modal = document.getElementById('cloud-open-modal');
+  const listContainer = document.getElementById('cloud-files-list');
+  modal.style.display = 'flex';
+  listContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; text-align: center; padding: 20px 0;">Cargando lista de artículos...</div>';
+  
+  try {
+    const response = await fetch(`https://api.github.com/repos/${repo}/contents/src/articles`, {
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error('No se pudo conectar a GitHub. Verifica el repositorio o el Token.');
+    }
+    
+    const files = await response.json();
+    const mdFiles = files.filter(f => f.name.endsWith('.md'));
+    
+    if (mdFiles.length === 0) {
+      listContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; text-align: center; padding: 20px 0;">No se encontraron artículos .md en src/articles/</div>';
+      return;
+    }
+    
+    listContainer.innerHTML = '';
+    mdFiles.forEach(file => {
+      const btn = document.createElement('button');
+      btn.className = 'action-btn';
+      btn.style.width = '100%';
+      btn.style.justifyContent = 'flex-start';
+      btn.style.textAlign = 'left';
+      btn.style.padding = '10px 12px';
+      btn.style.fontSize = '12px';
+      btn.style.fontFamily = 'var(--font-sans)';
+      btn.style.background = 'rgba(255,255,255,0.02)';
+      btn.style.borderColor = 'rgba(255,255,255,0.05)';
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-future)" stroke-width="2.5" style="width: 14px; height: 14px; margin-right: 8px; flex-shrink: 0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.name}</span>
+      `;
+      
+      btn.addEventListener('click', async () => {
+        listContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; text-align: center; padding: 20px 0;">Cargando contenido...</div>';
+        try {
+          const fileResponse = await fetch(file.download_url);
+          if (fileResponse.ok) {
+            const content = await fileResponse.text();
+            
+            fileDisplayName = file.name;
+            currentFileSha = file.sha;
+            fileSystemHandle = null;
+            isDirty = false;
+            
+            sourceEditor.value = content;
+            const parsed = parseYAMLFrontmatter(content);
+            frontmatterData = parsed.metadata;
+            syncFrontmatterFieldsToInputs();
+            
+            updateStatusDisplay();
+            synchronizeSourceToCanvas();
+            localStorage.removeItem('moed_md_editor_buffer');
+            
+            historyStates = [sourceEditor.value];
+            historyIndex = 0;
+            updateHistoryButtons();
+            
+            modal.style.display = 'none';
+          } else {
+            alert('Error al descargar el contenido del archivo.');
+          }
+        } catch (err) {
+          alert('Error al abrir el archivo: ' + err.message);
+        }
+      });
+      listContainer.appendChild(btn);
+    });
+  } catch (err) {
+    listContainer.innerHTML = `<div style="color: #EF4444; font-size: 12px; text-align: center; padding: 20px 0;">Error: ${err.message}</div>`;
+  }
+}
+
+async function publishToGitHub() {
+  const token = localStorage.getItem('moed_github_token');
+  const repo = localStorage.getItem('moed_github_repo');
+  
+  if (!token || !repo) {
+    alert('Por favor, conecta primero tu cuenta de GitHub en la pestaña "Conectar GitHub" del Asistente IA.');
+    openAiModal();
+    const githubTab = document.querySelector('.ai-tab-btn[data-tab="github"]');
+    if (githubTab) githubTab.click();
+    return;
+  }
+  
+  ensureSourceSyncedFromCanvas();
+  const content = sourceEditor.value;
+  
+  let filename = fileDisplayName;
+  if (filename === 'articulo-nuevo.md' || !filename) {
+    const slug = slugify(frontmatterData.title || 'Título del Artículo');
+    filename = `${slug}.md`;
+  }
+  
+  const btn = document.getElementById('btn-publish');
+  const originalHTML = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<svg viewBox="0 0 24 24" class="animate-spin" style="animation: spin 1s linear infinite; stroke: currentColor; width:16px; height:16px;"><circle cx="12" cy="12" r="10" stroke-width="3" style="opacity:0.25;"/><path fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 0 1 4 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" style="stroke:none;"/></svg><span class="btn-label" style="margin-left:6px;">Publicando...</span>`;
+  
+  try {
+    if (!currentFileSha) {
+      try {
+        const checkResponse = await fetch(`https://api.github.com/repos/${repo}/contents/src/articles/${filename}`, {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        if (checkResponse.ok) {
+          const checkData = await checkResponse.json();
+          currentFileSha = checkData.sha;
+        }
+      } catch (e) {
+        console.log('El archivo parece ser nuevo en GitHub.');
+      }
+    }
+    
+    // Base64 encode handling unicode characters safely
+    const utf8Bytes = new TextEncoder().encode(content);
+    let binary = "";
+    for (let i = 0; i < utf8Bytes.length; i++) {
+      binary += String.fromCharCode(utf8Bytes[i]);
+    }
+    const base64Content = btoa(binary);
+    const commitMessage = `✍️ Publicado: "${frontmatterData.title}" vía Moed Editor`;
+    
+    const payload = {
+      message: commitMessage,
+      content: base64Content
+    };
+    if (currentFileSha) {
+      payload.sha = currentFileSha;
+    }
+    
+    const response = await fetch(`https://api.github.com/repos/${repo}/contents/src/articles/${filename}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    if (response.ok) {
+      const resData = await response.json();
+      currentFileSha = resData.content.sha;
+      fileDisplayName = filename;
+      fileSystemHandle = null;
+      isDirty = false;
+      updateStatusDisplay();
+      
+      btn.style.borderColor = '#10B981';
+      btn.style.background = 'rgba(16, 185, 129, 0.1)';
+      btn.style.color = '#FFF';
+      btn.innerHTML = `<span class="btn-label">✔ ¡En Vivo! (20s)</span>`;
+      
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.style.borderColor = '';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.innerHTML = originalHTML;
+      }, 3000);
+    } else {
+      const errData = await response.json();
+      throw new Error(errData.message || 'Error al comunicarse con GitHub');
+    }
+  } catch (err) {
+    alert('Error al publicar: ' + err.message);
+    btn.disabled = false;
+    btn.innerHTML = originalHTML;
+  }
+}
+
+function exportLocalFile() {
+  ensureSourceSyncedFromCanvas();
+  const content = sourceEditor.value;
+  
+  let filename = fileDisplayName;
+  if (filename === 'articulo-nuevo.md' || !filename) {
+    const slug = slugify(frontmatterData.title || 'Título del Artículo');
+    filename = `${slug}.md`;
+  }
+  
+  const blob = new Blob([content], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  
+  URL.revokeObjectURL(url);
+  
+  const btn = document.getElementById('btn-export');
+  const originalHTML = btn.innerHTML;
+  btn.innerHTML = `<span class="btn-label">✔ Descargado</span>`;
+  btn.style.borderColor = '#38bdf8';
+  btn.style.boxShadow = '0 0 10px rgba(56, 189, 248, 0.35)';
+  
+  setTimeout(() => {
+    btn.innerHTML = originalHTML;
+    btn.style.borderColor = '';
+    btn.style.boxShadow = '';
+  }, 1500);
+}
+
+// Bind cloud modal close actions
+document.getElementById('btn-close-cloud-open').addEventListener('click', () => {
+  document.getElementById('cloud-open-modal').style.display = 'none';
+});
+document.getElementById('btn-open-local-fallback').addEventListener('click', () => {
+  document.getElementById('cloud-open-modal').style.display = 'none';
+  triggerLocalFilePicker();
+});
+
+// Bind Export and Publish buttons
+document.getElementById('btn-export').addEventListener('click', exportLocalFile);
+document.getElementById('btn-publish').addEventListener('click', publishToGitHub);
+
+// Save GitHub integration details
+document.getElementById('btn-save-github').addEventListener('click', () => {
+  const token = document.getElementById('ai-github-token').value.trim();
+  const repo = document.getElementById('ai-github-repo').value.trim();
+  
+  if (!token || !repo) {
+    alert('Por favor, completa ambos campos para establecer la conexión.');
+    return;
+  }
+  
+  localStorage.setItem('moed_github_token', token);
+  localStorage.setItem('moed_github_repo', repo);
+  
+  const btn = document.getElementById('btn-save-github');
+  btn.textContent = '✔ ¡Conexión Guardada!';
+  btn.style.background = '#10B981';
+  
+  setTimeout(() => {
+    btn.innerHTML = '✔ Guardar Conexión de GitHub';
+    btn.style.background = '';
+    closeAiModal();
+  }, 1500);
+});
+
+// Populate GitHub keys on document load
+const savedToken = localStorage.getItem('moed_github_token');
+const savedRepo = localStorage.getItem('moed_github_repo');
+if (savedToken) document.getElementById('ai-github-token').value = savedToken;
+if (savedRepo) document.getElementById('ai-github-repo').value = savedRepo;
