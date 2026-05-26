@@ -96,6 +96,20 @@ Para garantizar un impacto visual premium que capture la esencia espiritual y te
     *   *Causa:* Al editar en el celular, el teclado virtual del sistema desplazaba el lienzo hacia arriba, sacando de la pantalla la cabecera superior y la barra de herramientas y haciendo imposible guardar o dar formato sin tener que hacer scroll manual continuamente.
     *   *Solución:* Fijamos de forma rígida `#top-navbar` (`position: sticky; top: 0;`) y `#formatting-bar` (`position: sticky; top: 49px;`), impidiendo su encogimiento (`flex-shrink: 0`). Ahora ambas cabeceras flotan de manera inamovible en el tope de la pantalla de cualquier móvil.
 
+### 6. Mobile UX — Barra de Formato Colapsable con Toggle `Aa`
+
+*   **Problema:** En pantallas de ≤768px, la barra de formato completa (deshacer, negrita, H1, H2, tablas, etc.) consumía todo el ancho y empujaba las herramientas de IA fuera de la vista, requiriendo scroll horizontal incómodo.
+*   **Solución:** Reestructuramos el `#formatting-bar` en dos capas independientes:
+    *   **Fila Principal (siempre visible):** Botón `Aa`, Metadatos (→ `Meta`), Completar con IA (→ `[IA] Completar`) y Corregir con IA (→ `[IA] Corregir`). Las herramientas de IA son la prioridad táctil.
+    *   **Drawer de Formato (`#format-tools-drawer`):** Todos los botones de formato clásico (deshacer, negrita, cursiva, H1, H2, tablas, etc.) se colapsan detrás de un `max-height: 0 → 60px` con transición cúbica. Se revelan al tocar `Aa`.
+*   **Badge IA:** Los botones de IA reemplazaron sus SVGs por una pastilla tipográfica estilizada `<span class="btn-ai-badge">IA</span>` con colores diferenciados (violeta para Completar, esmeralda para Corregir) — más compactos y reconocibles en táctil.
+*   **Desktop sin cambios:** En pantallas >768px el drawer siempre está visible y el botón `Aa` se oculta automáticamente via CSS.
+
+### 7. Mobile Top Nav — Menú `File` Desplegable (Glassmorphism)
+
+*   **Problema:** En móviles, el top navbar acumulaba demasiados botones de acción (Nuevo, Abrir, Exportar, Historial, etc.) que no cabían visualmente en el ancho disponible.
+*   **Solución:** Implementamos un botón `File ▾` que agrupa en un menú desplegable glassmorphism todas las acciones secundarias (Nuevo, Abrir, Exportar, Historial de Versiones), dejando visibles solo: `File ▾`, `Guardar`, los tabs de vista (`Visual` / `Código`) y `Ajustes`.
+
 ---
 
 ## 🧭 Plan de Verificación y Control de Calidad
@@ -104,6 +118,9 @@ Para garantizar un impacto visual premium que capture la esencia espiritual y te
 *   [x] **Sincronización de Borradores:** Validado que los artículos con `published: false` no se listan en la landing principal ni en desarrollo local ni en producción.
 *   [x] **Sanitización del Pegado:** Comprobado que copiar textos enriquecidos externos no inyecta spans o estilos inline en la base de datos de artículos.
 *   [x] **Pruebas de Exportación y SHA:** Confirmada la descarga física directa de archivos `.md` y la compatibilidad con hashes Git `SHA` en actualizaciones remotas.
+*   [x] **Barra de Formato Colapsable (Mobile):** Verificado que el drawer `Aa` se abre/cierra con animación fluida en viewport de 644px. Fila principal siempre visible con AI tools y Meta.
+*   [x] **Footer Sticky en Mobile:** Confirmado que `#editor-status-bar` permanece fijo al fondo y se oculta automáticamente cuando el teclado virtual sube (via `@media (max-height: 580px)`).
+*   [x] **Menú File Desplegable (Mobile):** Verificado que el dropdown glassmorphism aparece correctamente posicionado y se cierra al tocar fuera de él.
 
 ---
 
