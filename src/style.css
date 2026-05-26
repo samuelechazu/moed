@@ -386,8 +386,33 @@ body.light-mode #modal-article-content ul {
   color: #475569 !important;
 }
 body.light-mode #modal-article-content div.mt-12 {
-  background: rgba(15, 23, 42, 0.02) !important;
-  border-color: rgba(15, 23, 42, 0.05) !important;
+  background: rgba(15, 23, 42, 0.03) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+body.light-mode #modal-article-content div.mt-12 p {
+  color: #475569 !important;
+}
+body.light-mode #modal-article-content div.mt-12 a {
+  color: #8b5cf6 !important;
+}
+body.light-mode #modal-article-content div.mt-12 a:hover {
+  color: #6d28d9 !important;
+}
+body.light-mode #modal-article-content header div {
+  color: #475569 !important;
+}
+body.light-mode #modal-article-content a {
+  color: #6366f1 !important;
+  border-bottom-color: rgba(99, 102, 241, 0.4) !important;
+}
+body.light-mode #modal-article-content a:hover {
+  color: #4f46e5 !important;
+  border-bottom-color: #4f46e5 !important;
+}
+body.light-mode #modal-article-content span.inline-flex {
+  background-color: rgba(99, 102, 241, 0.08) !important;
+  border-color: rgba(99, 102, 241, 0.15) !important;
+  color: #494edc !important;
 }
 
 body.light-mode #theme-toggle {

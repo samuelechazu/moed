@@ -809,6 +809,45 @@ body.light-mode #btn-frontmatter:hover {
   color: #3730a3 !important;
 }
 
+/* Cloud Open Modal Light Mode Overrides */
+body.light-mode #cloud-open-modal {
+  background: rgba(248, 250, 252, 0.75) !important;
+}
+body.light-mode #cloud-open-modal .modal-card {
+  background: #ffffff !important;
+  border-color: rgba(168, 85, 247, 0.2) !important;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.1), 0 0 32px rgba(168, 85, 247, 0.05) !important;
+}
+body.light-mode #cloud-open-modal h3 {
+  color: #0f172a !important;
+}
+body.light-mode #cloud-open-modal .action-btn {
+  background: rgba(15, 23, 42, 0.03) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #334155 !important;
+}
+body.light-mode #cloud-open-modal .action-btn:hover {
+  background: rgba(15, 23, 42, 0.06) !important;
+  color: #0f172a !important;
+  border-color: var(--accent-future) !important;
+}
+body.light-mode #cloud-open-modal #cloud-files-list .action-btn {
+  background: rgba(15, 23, 42, 0.01) !important;
+  border-color: rgba(15, 23, 42, 0.05) !important;
+  color: #475569 !important;
+}
+body.light-mode #cloud-open-modal #cloud-files-list .action-btn:hover {
+  background: rgba(168, 85, 247, 0.05) !important;
+  border-color: var(--accent-future) !important;
+  color: #9333ea !important;
+}
+body.light-mode #btn-close-cloud-open {
+  color: var(--text-muted) !important;
+}
+body.light-mode #btn-close-cloud-open:hover {
+  color: #0f172a !important;
+}
+
 /* Info displays */
 body.light-mode #file-meta {
   background: rgba(15, 23, 42, 0.02) !important;
@@ -976,8 +1015,159 @@ body.state-source #frontmatter-panel {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+/* Collapsible Guides Details (GitHub & Gemini) */
+.github-guide-details summary::-webkit-details-marker,
+.gemini-guide-details summary::-webkit-details-marker {
+  display: none;
+}
+.github-guide-details summary,
+.gemini-guide-details summary {
+  list-style: none;
+}
+.github-guide-details[open] summary svg,
+.gemini-guide-details[open] summary svg {
+  transform: rotate(180deg);
+}
+.github-guide-details ol li strong,
+.gemini-guide-details ol li strong {
+  color: var(--text-editor);
+}
 
+/* =========================================================================
+   Magic AI One-Click Completion Styles & Animations
+   ========================================================================= */
 
+#magic-ai-loading-overlay {
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
 
+#magic-ai-loading-overlay.visible {
+  display: flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Sparkles pulsing aura in background */
+@keyframes pulse-aura {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+/* Dashed ring rotate around central AI core */
+@keyframes rotate-dashed {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Floating effect for the central AI sparkle card */
+@keyframes float-icon {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(1.5deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+/* Rotation spin animation for loading circular indicators */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Light mode support for magic buttons */
+body.light-mode #btn-magic-ai {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%) !important;
+  border-color: rgba(139, 92, 246, 0.3) !important;
+  color: #7c3aed !important;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.08) !important;
+}
+
+body.light-mode #btn-magic-ai:hover {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(168, 85, 247, 0.18) 100%) !important;
+  border-color: rgba(139, 92, 246, 0.5) !important;
+  color: #6d28d9 !important;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.18) !important;
+}
+
+body.light-mode #btn-frontmatter-ai {
+  border-color: rgba(139, 92, 246, 0.35) !important;
+  background: rgba(139, 92, 246, 0.06) !important;
+  color: #7c3aed !important;
+}
+
+body.light-mode #btn-frontmatter-ai:hover {
+  background: rgba(139, 92, 246, 0.12) !important;
+  border-color: rgba(139, 92, 246, 0.55) !important;
+  color: #6d28d9 !important;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.1) !important;
+}
+
+/* ⚙️ Global Settings Button Micro-Animations */
+#btn-global-settings svg {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease !important;
+}
+
+#btn-global-settings:hover svg {
+  transform: rotate(60deg) !important;
+  color: var(--accent-future) !important;
+}
+
+#btn-global-settings:hover {
+  border-color: var(--accent-future) !important;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.2) !important;
+}
+
+/* ✍️ Spelling & Grammar Corrector Premium Glow (Dark Mode) */
+#btn-fix-spelling:hover:not(:disabled) {
+  border-color: rgba(16, 185, 129, 0.6) !important;
+  color: #FFFFFF !important;
+  background: rgba(16, 185, 129, 0.12) !important;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.28) !important;
+}
+
+/* Light mode support for Spelling Corrector & Gear Trigger */
+body.light-mode #btn-fix-spelling {
+  background: rgba(16, 185, 129, 0.06) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  color: #059669 !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.06) !important;
+}
+
+body.light-mode #btn-fix-spelling:hover:not(:disabled) {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(16, 185, 129, 0.55) !important;
+  color: #047857 !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15) !important;
+}
+
+body.light-mode #btn-global-settings {
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #475569 !important;
+}
+
+body.light-mode #btn-global-settings:hover {
+  border-color: var(--accent-future) !important;
+  color: var(--accent-future) !important;
+  background: rgba(168, 85, 247, 0.05) !important;
+  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.12) !important;
+}
 
 

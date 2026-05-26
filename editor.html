@@ -63,6 +63,11 @@
         <div class="mode-tab" data-mode="state-source" role="radio" aria-checked="false" tabindex="-1">Código</div>
       </div>
 
+      <!-- Global Settings Hub Trigger -->
+      <button id="btn-global-settings" class="action-btn icon-only" title="Ajustes del Sistema (Moed Suite)" style="border-color: rgba(168, 85, 247, 0.25); color: #cbd5e1; margin-right: 2px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;stroke: currentColor;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+
       <!-- Theme Switcher -->
       <button id="theme-toggle" class="action-btn icon-only" title="Cambiar Tema (Claro/Oscuro)">
         <svg id="theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true" style="stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
@@ -140,9 +145,16 @@
           <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke:var(--accent-future);"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
           <span class="btn-label" style="color:var(--accent-future);font-weight:600;">Metadatos</span>
         </button>
-        <button class="action-btn" id="btn-ai" title="Asistente de Redacción IA" style="border-color: rgba(168, 85, 247, 0.3); background: rgba(168, 85, 247, 0.05); color: #c084fc;">
-          <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="m5 3 1 2.5L8.5 6 6 7 5 9.5 4 7 1.5 6 4 5.5z"/><path d="m19 17 1 2.5 2.5.5-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z"/></svg>
-          <span class="btn-label" style="font-weight:600;">Asistente IA</span>
+      </div>
+
+      <div class="button-group">
+        <button class="action-btn" id="btn-magic-ai" title="✨ Completar y Pulir con IA" style="border-color: rgba(139, 92, 246, 0.45); background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%); color: #e9d5ff; font-weight: 700; box-shadow: 0 0 12px rgba(168, 85, 247, 0.15);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;stroke:currentColor;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          <span class="btn-label">✨ Completar con IA</span>
+        </button>
+        <button class="action-btn" id="btn-fix-spelling" title="✍️ Corregir Ortografía y Gramática con IA" style="border-color: rgba(16, 185, 129, 0.45); background: rgba(16, 185, 129, 0.05); color: #a7f3d0; font-weight: 700; box-shadow: 0 0 12px rgba(16, 185, 129, 0.1);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;stroke:currentColor;"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+          <span class="btn-label">✍️ Corregir con IA</span>
         </button>
       </div>
     </div>
@@ -150,11 +162,15 @@
 
   <!-- Frontmatter Panel (YAML Editor) -->
   <div id="frontmatter-panel">
-    <div class="panel-header">
+    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
       <span class="panel-title">
         Metadatos del Artículo
         <span class="badge">YAML Frontmatter</span>
       </span>
+      <button class="action-btn" id="btn-frontmatter-ai" title="✨ Autocompletar metadatos y borrador" style="padding: 5px 10px; font-size: 11px; border-color: rgba(139, 92, 246, 0.4); background: rgba(139, 92, 246, 0.1); color: #e9d5ff; font-weight: 600;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 12px; height: 12px; margin-right: 4px; stroke: currentColor;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+        <span>✨ Completar con IA</span>
+      </button>
     </div>
     <div class="panel-grid">
       <div class="panel-field">
@@ -206,8 +222,6 @@
   </main>
 
   <input type="file" id="fallback-input" accept=".md,.markdown,.txt">
-
-  <!-- AI Copilot Modal -->
   <div id="ai-modal">
     <div class="modal-card">
       <!-- Close Button -->
@@ -223,97 +237,52 @@
           </svg>
         </div>
         <div>
-          <h2 style="font-family: var(--font-display); font-weight: 800; font-size: 16px; color: #FFF;">Copiloto de Redacción IA</h2>
-          <p style="font-size: 11px; color: var(--text-muted);">Genera y edita artículos con inteligencia artificial integrada</p>
+          <h2 style="font-family: var(--font-display); font-weight: 800; font-size: 16px; color: #FFF;">Configuración técnica de IA & CMS</h2>
+          <p style="font-size: 11px; color: var(--text-muted);">Establece tus claves seguras de Google Gemini y GitHub</p>
         </div>
       </div>
 
       <!-- Tabs Navigation -->
-      <div style="display: flex; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; gap: 4px;">
-        <button class="ai-tab-btn active" data-tab="prompt">1. Crear Prompt</button>
-        <button class="ai-tab-btn" data-tab="import">2. Importar MD</button>
-        <button class="ai-tab-btn" data-tab="direct">3. Auto-Redacción (API)</button>
-        <button class="ai-tab-btn" data-tab="github">4. Conectar GitHub</button>
+      <div style="display: flex; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; gap: 4px; overflow-x: auto;">
+        <button class="ai-tab-btn active" data-tab="gemini" style="white-space: nowrap; flex: 1;">1. Google Gemini Key</button>
+        <button class="ai-tab-btn" data-tab="github" style="white-space: nowrap; flex: 1;">2. Conectar GitHub</button>
+        <button class="ai-tab-btn" data-tab="voice" style="white-space: nowrap; flex: 1;">3. Voz de Autor</button>
       </div>
 
-      <!-- Tab Content: Prompt Builder -->
-      <div id="ai-tab-prompt" class="ai-tab-content" style="display: flex; flex-direction: column; gap: 16px;">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <div class="panel-field">
-            <span class="field-label">Idea o Tema</span>
-            <input type="text" id="ai-prompt-topic" class="field-input" placeholder="Ej: Las redes sociales y la idolatría digital">
-          </div>
-          <div class="panel-field">
-            <span class="field-label">Dimensión</span>
-            <select id="ai-prompt-category" class="field-input">
-              <option value="pasado">Pasado (Raíces y Profecía)</option>
-              <option value="presente">Presente (Respuestas Prácticas)</option>
-              <option value="futuro" selected>Futuro (Tecnología y Bioética)</option>
-            </select>
-          </div>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <div class="panel-field">
-            <span class="field-label">Tono de Escritura</span>
-            <select id="ai-prompt-tone" class="field-input">
-              <option value="profetico">Profético y Profundo (Ideal Futuro)</option>
-              <option value="cercano">Práctico y Cercano (Ideal Presente)</option>
-              <option value="historico">Histórico y Revelador (Ideal Pasado)</option>
-            </select>
-          </div>
-          <div class="panel-field">
-            <span class="field-label">Autor del Artículo</span>
-            <input type="text" id="ai-prompt-author" class="field-input" placeholder="Comunidad Moed" value="Comunidad Moed">
-          </div>
-        </div>
-        <div class="panel-field">
-          <span class="field-label">Puntos Clave o Argumentos (Uno por línea)</span>
-          <textarea id="ai-prompt-keys" class="field-input" style="height: 80px; resize: none;" placeholder="Ej:&#10;- El scroll infinito secuestra la atención del espíritu.&#10;- San Agustín y el concepto de la quietud divina en un mundo ruidoso.&#10;- Recomendaciones prácticas para un Shabat digital en familia."></textarea>
-        </div>
-        
-        <button id="btn-ai-copy-prompt" class="action-btn" style="width: 100%; padding: 12px; background: #8B5CF6; color: #FFF; border: none; font-weight: 700; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3"/></svg>
-          Generar y Copiar Prompt para tu IA (ChatGPT/Claude)
-        </button>
-      </div>
-
-      <!-- Tab Content: Import Markdown -->
-      <div id="ai-tab-import" class="ai-tab-content hidden" style="display: flex; flex-direction: column; gap: 16px;">
+      <!-- Tab Content: Google Gemini Key -->
+      <div id="ai-tab-gemini" class="ai-tab-content" style="display: flex; flex-direction: column; gap: 16px;">
         <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">
-          Pega el texto Markdown completo generado por tu IA en el cuadro de abajo. El editor extraerá automáticamente los metadatos YAML de la cabecera (título, autor, categoría) y cargará el cuerpo del artículo directamente en el lienzo.
+          Introduce tu API Key de Google Gemini para activar el sistema de autocompletado y pulido de borradores de un solo clic directamente en tu editor visual.
         </p>
-        <div class="panel-field">
-          <span class="field-label">Markdown del Artículo</span>
-          <textarea id="ai-import-content" class="field-input" style="height: 180px; font-family:var(--font-mono); font-size:11px; resize: none;" placeholder="---&#10;title: &quot;Título del Artículo&quot;&#10;author: &quot;Comunidad Moed&quot;&#10;date: &quot;2026-05-23&quot;&#10;category: &quot;futuro&quot;&#10;readTime: &quot;4 min&quot;&#10;coverImage: &quot;/images/portada.png&quot;&#10;teaser: &quot;Resumen del artículo...&quot;&#10;---&#10;&#10;# El algoritmo de..."></textarea>
-        </div>
-        <button id="btn-ai-import" class="action-btn" style="width: 100%; padding: 12px; background: #6366F1; color: #FFF; border: none; font-weight: 700; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M12 5v14M5 12h14"/></svg>
-          Importar al Editor de Moed
-        </button>
-      </div>
-
-      <!-- Tab Content: Direct Generation (API) -->
-      <div id="ai-tab-direct" class="ai-tab-content hidden" style="display: flex; flex-direction: column; gap: 16px;">
         <div class="panel-field">
           <span class="field-label">Gemini API Key (Se guarda localmente)</span>
-          <input type="password" id="ai-api-key" class="field-input" placeholder="Introduce tu clave de API de Google Gemini (AI Studio)">
+          <input type="password" id="ai-gemini-key" class="field-input" placeholder="Introduce tu clave de API de Google Gemini (AI Studio)">
           <p style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Consigue una gratis en <a href="https://aistudio.google.com/" target="_blank" style="color: #a855f7; text-decoration: underline;">Google AI Studio</a>. Se almacena localmente de forma segura en tu navegador.</p>
         </div>
-        <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.05); margin: 4px 0;">
-        <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">
-          Usa tu API Key para redactar el artículo en tiempo real directamente en la aplicación. Usará los mismos parámetros configurados en la pestaña 1 (Idea, dimensión y puntos clave).
-        </p>
-        <button id="btn-ai-generate" class="action-btn" style="width: 100%; padding: 12px; background: #a855f7; color: #FFF; border: none; font-weight: 700; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
-            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
-          </svg>
-          Generar Artículo Completo con Gemini IA
+        
+        <!-- Step-by-Step Gemini Guide -->
+        <details class="gemini-guide-details" style="border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 12px; background: rgba(168, 85, 247, 0.02); padding: 12px 14px; transition: all 0.2s ease;">
+          <summary style="font-size: 11px; font-weight: 600; color: var(--accent-future); cursor: pointer; user-select: none; display: flex; align-items: center; gap: 6px; outline: none; font-family: var(--font-sans);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;transition:transform 0.2s;stroke:currentColor;"><path d="M12 9v4m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            ¿Cómo conseguir tu Gemini API Key gratis?
+          </summary>
+          <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted); line-height: 1.6; display: flex; flex-direction: column; gap: 8px; font-family: var(--font-sans);">
+            <ol style="margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px;">
+              <li>Ve a <strong>Google AI Studio</strong> (enlace abajo) e inicia sesión con tu cuenta de Google.</li>
+              <li>Haz clic en el botón <strong>Get API Key</strong> en la esquina superior izquierda.</li>
+              <li>Selecciona <strong>Create API Key</strong> y elige si deseas crearla en un proyecto nuevo o en uno existente.</li>
+              <li>Copia tu clave generada (empieza con <code>AIzaSy</code>) y pégala en el campo de arriba.</li>
+            </ol>
+            <a href="https://aistudio.google.com/" target="_blank" class="action-btn" style="margin-top: 4px; justify-content: center; font-size: 10px; padding: 6px 12px; background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.25); color: var(--accent-future); display: inline-flex; width: 100%;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;margin-right:4px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+              Abrir Google AI Studio
+            </a>
+          </div>
+        </details>
+
+        <button id="btn-save-gemini-key" class="action-btn" style="width: 100%; padding: 12px; background: #8B5CF6; color: #FFF; border: none; font-weight: 700; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-sans);">
+          ✔ Guardar Clave de Google Gemini
         </button>
-        <!-- Loading Animation Area -->
-        <div id="ai-loading-container" class="hidden" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 0; gap: 12px;">
-          <div style="width: 32px; height: 32px; border-radius: 50%; border: 3px solid rgba(168, 85, 247, 0.2); border-top-color: #a855f7; animation: spin 1s linear infinite;"></div>
-          <span id="ai-loading-text" style="font-size: 12px; color: #a855f7; font-weight: 500;">Redactando artículo...</span>
-        </div>
       </div>
 
       <!-- Tab Content: Connect GitHub -->
@@ -330,8 +299,60 @@
           <span class="field-label">Repositorio de GitHub</span>
           <input type="text" id="ai-github-repo" class="field-input" placeholder="usuario/repositorio" value="samuelechazu/moed">
         </div>
+        
+        <!-- Step-by-Step PAT Guide -->
+        <details class="github-guide-details" style="border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 12px; background: rgba(168, 85, 247, 0.02); padding: 12px 14px; transition: all 0.2s ease;">
+          <summary style="font-size: 11px; font-weight: 600; color: var(--accent-future); cursor: pointer; user-select: none; display: flex; align-items: center; gap: 6px; outline: none; font-family: var(--font-sans);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;transition:transform 0.2s;stroke:currentColor;"><path d="M12 9v4m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            ¿Cómo crear tu Token (PAT)? Paso a Paso
+          </summary>
+          <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted); line-height: 1.6; display: flex; flex-direction: column; gap: 8px; font-family: var(--font-sans);">
+            <ol style="margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px;">
+              <li>Ve a <strong>Settings</strong> &rarr; <strong>Developer Settings</strong> en GitHub.</li>
+              <li>Selecciona <strong>Personal access tokens</strong> &rarr; <strong>Fine-grained tokens</strong> (Recomendado).</li>
+              <li>Haz clic en <strong>Generate new token</strong>, asocia un nombre y selecciona tu repositorio en <em>Repository access</em>.</li>
+              <li>En <strong>Repository permissions</strong>, busca <strong>Contents</strong> y actívalo como <strong>Read and Write</strong>.</li>
+              <li>Genera el token, cópialo y pégalo arriba.</li>
+            </ol>
+            <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" class="action-btn" style="margin-top: 4px; justify-content: center; font-size: 10px; padding: 6px 12px; background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.25); color: var(--accent-future); display: inline-flex; width: 100%;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;margin-right:4px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+              Crear Token en GitHub
+            </a>
+          </div>
+        </details>
+
         <button id="btn-save-github" class="action-btn" style="width: 100%; padding: 12px; background: #10B981; color: #FFF; border: none; font-weight: 700; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-sans);">
           ✔ Guardar Conexión de GitHub
+        </button>
+      </div>
+
+      <!-- Tab Content: Voice of the Author Settings -->
+      <div id="ai-tab-voice" class="ai-tab-content hidden" style="display: flex; flex-direction: column; gap: 16px;">
+        <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">
+          Personaliza el perfil del escritor y las instrucciones de estilo para que la redacción automática con IA se adapte de forma estricta a tu propia pluma literaria.
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="panel-field">
+            <span class="field-label">Autor Predeterminado</span>
+            <input type="text" id="ai-voice-author" class="field-input" placeholder="Ej: Comunidad Moed" value="Comunidad Moed">
+          </div>
+          <div class="panel-field">
+            <span class="field-label">Tono de Escritura</span>
+            <select id="ai-voice-tone" class="field-input">
+              <option value="profetico">Profético y Profundo (Futuro)</option>
+              <option value="cercano">Práctico y Cercano (Presente)</option>
+              <option value="historico">Histórico y Revelador (Pasado)</option>
+            </select>
+          </div>
+        </div>
+        <div class="panel-field">
+          <span class="field-label">Estilo de Voz de IA (Instrucciones personalizadas)</span>
+          <textarea id="ai-voice-instructions" class="field-input" style="height: 100px; resize: none;" placeholder="Ej: Escribe en párrafos cortos y misteriosos. Utiliza citas poéticas del Antiguo Testamento y cierra siempre con una interrogación que invite a la quietud interior en Shabat..."></textarea>
+          <p style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Define directrices específicas de vocabulario, ritmo, referencias bíblicas o filosóficas preferidas.</p>
+        </div>
+        
+        <button id="btn-save-voice" class="action-btn" style="width: 100%; padding: 12px; background: #8B5CF6; color: #FFF; border: none; font-weight: 700; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-sans);">
+          ✔ Guardar Preferencias de Voz
         </button>
       </div>
 
@@ -361,6 +382,35 @@
         <!-- Dynamic list of files will be injected here -->
         <div style="color: var(--text-muted); font-size: 12px; text-align: center; padding: 20px 0;">Cargando lista de artículos...</div>
       </div>
+    </div>
+  </div>
+
+
+  <!-- Magic AI Overlay Loading Screen -->
+  <div id="magic-ai-loading-overlay" style="position: fixed; inset: 0; z-index: 500; display: none; align-items: center; justify-content: center; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); background: rgba(3, 5, 11, 0.85); flex-direction: column; gap: 24px; transition: opacity 0.3s ease; opacity: 0; pointer-events: none;">
+    <!-- Sparkles background aura -->
+    <div style="position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%); filter: blur(40px); z-index: -1; animation: pulse-aura 4s ease-in-out infinite;"></div>
+    <div style="position: absolute; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%); filter: blur(50px); z-index: -1; animation: pulse-aura 6s ease-in-out infinite alternate;"></div>
+    
+    <!-- AI Sparkle Glowing Icon -->
+    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+      <div class="glowing-ring" style="position: absolute; width: 80px; height: 80px; border-radius: 50%; border: 2px dashed rgba(168, 85, 247, 0.4); animation: rotate-dashed 8s linear infinite;"></div>
+      <div style="width: 64px; height: 64px; border-radius: 20px; background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%); display: flex; align-items: center; justify-content: center; color: #FFF; box-shadow: 0 0 30px rgba(168, 85, 247, 0.6); border: 1px solid rgba(255,255,255,0.15); animation: float-icon 3s ease-in-out infinite;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.25));">
+          <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+        </svg>
+      </div>
+    </div>
+    
+    <div style="text-align: center; max-width: 420px; padding: 0 24px; display: flex; flex-direction: column; gap: 8px; align-items: center;">
+      <h3 style="font-family: var(--font-display); font-weight: 900; font-size: 20px; color: #FFF; letter-spacing: -0.01em; background: linear-gradient(to right, #FFF, #d8b4fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Tejiendo el Hilo Eterno</h3>
+      <p id="magic-ai-loading-phase" style="font-size: 13px; color: var(--accent-future); font-weight: 600; min-height: 18px; letter-spacing: 0.01em;">Iniciando conexión con Google Gemini...</p>
+      <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">La IA de Moed está analizando tu título y notas iniciales para expandirlas con profundidad teológica, coherencia poética e hilado enriquecido.</p>
+      
+      <button id="btn-cancel-magic-ai" class="action-btn" style="margin-top: 12px; background: rgba(239, 68, 68, 0.12) !important; border-color: rgba(239, 68, 68, 0.3) !important; color: #fca5a5 !important; font-weight: 700; padding: 8px 18px; font-size: 11px; display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1) !important;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 12px; height: 12px; stroke: currentColor;"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        <span>Cancelar Generación</span>
+      </button>
     </div>
   </div>
 

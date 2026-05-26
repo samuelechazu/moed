@@ -491,7 +491,8 @@ function toggleStrike() {
   });
 }
 
-document.querySelectorAll('#top-navbar .action-btn, #formatting-bar .action-btn').forEach(btn => {
+// Bind mousedown preservation only to formatting tools to prevent losing canvas text selection
+document.querySelectorAll('#formatting-bar .action-btn').forEach(btn => {
   btn.addEventListener('mousedown', preserveToolbarMousedown);
 });
 
@@ -694,6 +695,15 @@ document.getElementById('btn-frontmatter').addEventListener('click', () => {
   });
 });
 
+// Synchronize Metadata Title input directly to Visual Editor Title live
+document.getElementById('meta-title').addEventListener('input', () => {
+  const titleVal = document.getElementById('meta-title').value.trim() || 'Título del Artículo';
+  const visualTitle = document.getElementById('visual-editor-title');
+  if (visualTitle && visualTitle.textContent !== titleVal) {
+    visualTitle.textContent = titleVal;
+  }
+});
+
 function synchronizeSourceToCanvas() {
   if (isParsingLock) return;
   isParsingLock = true;
@@ -709,7 +719,7 @@ function synchronizeSourceToCanvas() {
   syncFrontmatterFieldsToInputs();
 
   const lines = parsed.content.split('\n');
-  let html = '';
+  let html = `<h1 id="visual-editor-title" contenteditable="true">${compileInlineMarkdown(frontmatterData.title || 'Título del Artículo')}</h1>`;
   let tableRows = [];
   let inTable = false;
   let inCodeBlock = false;
@@ -728,6 +738,7 @@ function synchronizeSourceToCanvas() {
     inCodeBlock = false;
   };
 
+  let isFirstLine = true;
   for (const line of lines) {
     const trimmed = line.trim();
 
@@ -750,6 +761,16 @@ function synchronizeSourceToCanvas() {
     } else if (inTable) {
       flushTable();
     }
+
+    // Skip the first H1 if it is the article title (migrates old format files cleanly)
+    if (isFirstLine && trimmed.startsWith('# ')) {
+      const headerText = trimmed.slice(2).trim();
+      if (headerText.toLowerCase() === (frontmatterData.title || '').trim().toLowerCase()) {
+        isFirstLine = false;
+        continue;
+      }
+    }
+    if (trimmed !== '') isFirstLine = false;
 
     if (trimmed.startsWith('# ')) html += `<h1>${compileInlineMarkdown(line.slice(2))}</h1>`;
     else if (trimmed.startsWith('## ')) html += `<h2>${compileInlineMarkdown(line.slice(3))}</h2>`;
@@ -816,8 +837,18 @@ function synchronizeCanvasToSource() {
   if (isParsingLock) return;
   isParsingLock = true;
 
+  const titleNode = canvas.querySelector('#visual-editor-title');
+  if (titleNode) {
+    const newTitle = titleNode.textContent.trim();
+    if (newTitle && newTitle !== frontmatterData.title) {
+      frontmatterData.title = newTitle;
+      document.getElementById('meta-title').value = newTitle;
+    }
+  }
+
   const md = [];
   Array.from(canvas.children).forEach(node => {
+    if (node.id === 'visual-editor-title') return; // Skip the visual title node
     const tag = node.tagName.toLowerCase();
 
     if (tag === 'table') {
@@ -1128,22 +1159,35 @@ function resetDocument(content, name) {
   updateHistoryButtons();
 }
 
-document.getElementById('btn-new').addEventListener('click', () => {
-  if (isDirty && !confirm('¿Descartar cambios actuales?')) return;
-  
-  // Default new frontmatter
+function createNewDocument() {
   frontmatterData = {
     title: 'Título del Artículo',
     author: 'Comunidad Moed',
-    date: '23 de Mayo, 2026',
+    date: '2026-05-23',
     category: 'futuro',
     published: 'false',
-    coverImage: '/images/portada-ia.jpg',
+    coverImage: '',
     teaser: 'Breve resumen introductorio para la grilla...'
   };
-  
   const combined = generateYAMLFrontmatter() + shortTemplate;
   resetDocument(combined, 'articulo-nuevo.md');
+  console.log('Nuevo documento creado con éxito.');
+}
+
+document.getElementById('btn-new').addEventListener('click', () => {
+  try {
+    if (isDirty) {
+      const hudSpan = safetyHud.querySelector('span');
+      if (hudSpan) hudSpan.textContent = 'Cambios sin guardar. ¿Descartar y crear un nuevo documento?';
+      safetyHud.dataset.action = 'new';
+      safetyHud.classList.add('visible');
+      return;
+    }
+    createNewDocument();
+  } catch (err) {
+    console.error('Error al crear nuevo documento:', err);
+    alert('Error al crear nuevo documento: ' + err.message);
+  }
 });
 
 async function openFile() {
@@ -1361,10 +1405,22 @@ function commitFile(fsHandle) {
 }
 
 document.getElementById('btn-discard').addEventListener('click', () => {
-  commitFile(window._pendingFsHandle || null);
+  if (safetyHud.dataset.action === 'new') {
+    safetyHud.classList.remove('visible');
+    safetyHud.dataset.action = '';
+    const hudSpan = safetyHud.querySelector('span');
+    if (hudSpan) hudSpan.textContent = 'Cambios sin guardar. ¿Descartar el documento activo?';
+    createNewDocument();
+  } else {
+    commitFile(window._pendingFsHandle || null);
+  }
 });
 document.getElementById('btn-cancel-drop').addEventListener('click', () => {
   safetyHud.classList.remove('visible');
+  safetyHud.dataset.action = '';
+  const hudSpan = safetyHud.querySelector('span');
+  if (hudSpan) hudSpan.textContent = 'Cambios sin guardar. ¿Descartar el documento activo?';
+  
   pendingFileReference = null;
   window._pendingFsHandle = null;
 });
@@ -1377,18 +1433,13 @@ window.addEventListener('keydown', async (e) => {
   }
   if (isMeta && e.key.toLowerCase() === 'n') {
     e.preventDefault();
-    if (!isDirty || confirm('¿Descartar cambios actuales?')) {
-      // Default new frontmatter
-      frontmatterData = {
-        title: 'Título del Artículo',
-        author: 'Comunidad Moed',
-        date: '23 de Mayo, 2026',
-        category: 'futuro',
-        coverImage: '/images/portada-ia.jpg',
-        teaser: 'Breve resumen introductorio para la grilla...'
-      };
-      const combined = generateYAMLFrontmatter() + shortTemplate;
-      resetDocument(combined, 'articulo-nuevo.md');
+    if (isDirty) {
+      const hudSpan = safetyHud.querySelector('span');
+      if (hudSpan) hudSpan.textContent = 'Cambios sin guardar. ¿Descartar y crear un nuevo documento?';
+      safetyHud.dataset.action = 'new';
+      safetyHud.classList.add('visible');
+    } else {
+      createNewDocument();
     }
   }
   if (isMeta && e.key.toLowerCase() === 'z' && !e.shiftKey) {
@@ -1408,18 +1459,20 @@ setInterval(() => {
 }, 500);
 
 // =========================================================================
-// AI Copilot Integration
+// AI Copilot Integration & One-Click Magic Completion Suite (OLED Template)
 // =========================================================================
 
 function openAiModal() {
-  document.getElementById('ai-modal').classList.add('active');
+  const modal = document.getElementById('ai-modal');
+  if (modal) modal.classList.add('active');
 }
 
 function closeAiModal() {
-  document.getElementById('ai-modal').classList.remove('active');
+  const modal = document.getElementById('ai-modal');
+  if (modal) modal.classList.remove('active');
 }
 
-// Tab switching logic
+// Tab switching logic for simplified Gemini / GitHub / Voice options (OLED template)
 document.querySelectorAll('.ai-tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.ai-tab-btn').forEach(b => b.classList.remove('active'));
@@ -1429,64 +1482,10 @@ document.querySelectorAll('.ai-tab-btn').forEach(btn => {
     document.querySelectorAll('.ai-tab-content').forEach(content => {
       content.classList.add('hidden');
     });
-    document.getElementById(`ai-tab-${tabName}`).classList.remove('hidden');
+    const targetContent = document.getElementById(`ai-tab-${tabName}`);
+    if (targetContent) targetContent.classList.remove('hidden');
   });
 });
-
-// Helper to generate the prompt text
-function generatePromptText() {
-  const topic = document.getElementById('ai-prompt-topic').value.trim() || 'Un tema teológico y tecnológico de relevancia moderna';
-  const category = document.getElementById('ai-prompt-category').value;
-  const tone = document.getElementById('ai-prompt-tone').value;
-  const author = document.getElementById('ai-prompt-author').value.trim() || 'Comunidad Moed';
-  const keys = document.getElementById('ai-prompt-keys').value.trim();
-  
-  const categoryLabel = category === 'pasado' ? 'El Pasado (Raíces, Profecía y Revelación del Antiguo Testamento)' :
-                        category === 'presente' ? 'El Presente (Respuestas Prácticas, Emocionales y Espirituales Cotidianas)' :
-                        'El Futuro (Tecnología, Inteligencia Artificial, Bioética y Profecía Escatológica)';
-                        
-  const toneLabel = tone === 'profetico' ? 'Profético, reflexivo, teológicamente profundo y analítico' :
-                    tone === 'cercano' ? 'Práctico, pastoral, cercano, reconfortante y aplicable al día a día' :
-                    'Histórico, erudito, revelador y basado en raíces hebreas y bíblicas';
-
-  let prompt = `Eres un redactor experto, teólogo y analista cultural para **Moed**, un portal y comunidad dedicada a explorar el hilo eterno que une las raíces de la fe judeocristiana con los retos tecnológicos y existenciales de nuestra era.
-
-Tu tarea es escribir un artículo de blog premium y profundo sobre el siguiente tema:
-**TEMA: ${topic}**
-
-**DIMENSIÓN (CATEGORÍA):** ${categoryLabel}
-**AUTOR:** ${author}
-**FECHA DE CREACIÓN:** ${getTodayISODate()}
-**TONO DE REDACCIÓN:** ${toneLabel}
-`;
-
-  if (keys) {
-    prompt += `\n**PUNTOS CLAVE O ARGUMENTOS QUE DEBES INCLUIR ABSOLUTAMENTE:**
-${keys}
-`;
-  }
-
-  prompt += `\n**REQUISITOS ESTRUCTURALES Y DE FORMATO (OBLIGATORIOS):**
-1. Debes formatear la salida como un archivo Markdown (.md) completo e incluir una cabecera de metadatos **YAML Frontmatter** exacta al inicio del documento. El formato debe ser estrictamente este:
----
-title: "[Escribe un título sumamente atractivo y misterioso]"
-author: "${author}"
-date: "${getTodayISODate()}"
-category: "${category}"
-coverImage: "/images/portada-[palabra-clave-en-ingles-miniscula].jpg"
-teaser: "[Escribe un resumen gancho de una sola oración para la grilla de la web, máx 150 caracteres]"
----
-
-2. El cuerpo del artículo debe comenzar inmediatamente después de los metadatos YAML con un encabezado principal de primer nivel (\`# Título del Artículo\`) que sea idéntico al título en los metadatos.
-3. Utiliza una excelente jerarquía de encabezados Markdown: encabezados secundarios (\`## Subtítulo\`) para secciones clave y encabezados terciarios (\`### Sub-sección\`) si es necesario.
-4. Incluye al menos una cita o frase destacada utilizando el formato de bloque de cita de Markdown (\`> "Cita destacada en cursiva"\`).
-5. Utiliza formato enriquecido: negritas (\`**texto**\`) para dar énfasis, listas con viñetas (\`- ítem\`) para organizar conceptos y marcas destacadas (\`==texto==\`) para pasajes clave.
-6. El texto debe ser fluido, redactado con una prosa elegante, poética y rigurosa. Evita clichés corporativos, introducciones vacías o conclusiones genéricas. Debe terminar con un párrafo de cierre potente y reflexivo, no una sección titulada "Conclusión".
-
-Genera únicamente el código Markdown del artículo completo, sin añadir comentarios, explicaciones, ni etiquetas contenedoras adicionales al principio o al final (como \`\`\`markdown).`;
-
-  return prompt;
-}
 
 // Helper to import Markdown directly into editor
 function importMarkdownIntoEditor(rawText) {
@@ -1511,94 +1510,116 @@ function importMarkdownIntoEditor(rawText) {
   updateHistoryButtons();
 }
 
-// Wire up events
-document.getElementById('btn-ai').addEventListener('click', openAiModal);
-document.getElementById('close-ai-btn').addEventListener('click', closeAiModal);
+// Module-level abort controller for Magic AI request lifecycles
+let magicAiAbortController = null;
 
-document.getElementById('ai-modal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('ai-modal')) closeAiModal();
-});
-
-// Generate & Copy Prompt
-document.getElementById('btn-ai-copy-prompt').addEventListener('click', async () => {
-  const promptText = generatePromptText();
-  try {
-    await navigator.clipboard.writeText(promptText);
+// Centralized Magic AI Completion Engine (One-Click)
+async function triggerMagicAiCompletion() {
+  const apiKey = localStorage.getItem('moed_gemini_api_key') || '';
+  
+  if (!apiKey.trim()) {
+    openAiModal();
+    const geminiTabBtn = document.querySelector('.ai-tab-btn[data-tab="gemini"]');
+    if (geminiTabBtn) geminiTabBtn.click();
     
-    // Visual button success state
-    const btn = document.getElementById('btn-ai-copy-prompt');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '✔ ¡Prompt Copiado al Portapapeles!';
-    btn.style.background = '#10B981';
+    const geminiInput = document.getElementById('ai-gemini-key');
+    if (geminiInput) {
+      geminiInput.focus();
+      geminiInput.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+      setTimeout(() => { geminiInput.style.borderColor = ''; }, 2000);
+    }
     
-    setTimeout(() => {
-      btn.innerHTML = originalText;
-      btn.style.background = '';
-    }, 2000);
-  } catch (err) {
-    alert('Error al copiar el prompt: ' + err.message);
-  }
-});
-
-// Import pasted MD
-document.getElementById('btn-ai-import').addEventListener('click', () => {
-  const text = document.getElementById('ai-import-content').value.trim();
-  if (!text) {
-    alert('Por favor, pega el contenido Markdown generado por tu IA antes de importar.');
+    alert('Introduce tu Gemini API Key en la pestaña de configuración para activar el autocompletado con IA.');
     return;
   }
   
-  try {
-    importMarkdownIntoEditor(text);
-    document.getElementById('ai-import-content').value = '';
-    closeAiModal();
-    flashSaveButtonSuccess();
-  } catch (err) {
-    alert('Error al importar el archivo: Asegúrate de que tiene el formato Markdown con la cabecera YAML.');
+  ensureSourceSyncedFromCanvas();
+  
+  const rawText = sourceEditor.value;
+  const parsed = parseYAMLFrontmatter(rawText);
+  const currentTitle = frontmatterData.title || 'Título del Artículo';
+  
+  // Load custom default values for Author Voice to maintain template reuse
+  const defaultAuthor = localStorage.getItem('moed_default_author') || frontmatterData.author || 'Comunidad Moed';
+  const customVoiceStyle = localStorage.getItem('moed_ai_voice_style') || '';
+  
+  let voiceInstructionsSection = "";
+  if (customVoiceStyle.trim()) {
+    voiceInstructionsSection = `\n**ESTILO DE REDACCIÓN Y VOZ DE AUTOR (REQUISITO FUNDAMENTAL A SEGUIR):**
+Debes redactar el ensayo siguiendo de forma estricta las siguientes directrices y personalidad literaria indicadas por el autor:
+"${customVoiceStyle}"
+`;
   }
-});
+  
+  const promptText = `Eres un redactor experto, teólogo y analista cultural para **Moed**, un portal y comunidad dedicada a explorar el hilo eterno que une las raíces de la fe judeocristiana con los retos tecnológicos y existenciales de nuestra era.
 
-// Direct generation (API Call)
-document.getElementById('btn-ai-generate').addEventListener('click', async () => {
-  const apiKey = document.getElementById('ai-api-key').value.trim();
-  if (!apiKey) {
-    alert('Por favor, introduce tu Gemini API Key para utilizar la redacción directa.');
-    return;
+Tu tarea es **completar, expandir y pulir de forma magistral** un artículo partiendo de un borrador preliminar (o incluso solo de un título y notas iniciales).
+
+**METADATOS ACTUALES:**
+- Título del Artículo: "${currentTitle}"
+- Autor del Artículo: "${defaultAuthor}"
+- Categoría/Dimensión: "${frontmatterData.category || 'futuro'}"
+- Fecha: "${frontmatterData.date || getTodayISODate()}"
+
+**NOTAS INICIALES O BORRADOR EN EL CUERPO:**
+${parsed.content ? parsed.content.trim() : 'Escribe aquí tu análisis...'}
+
+**REQUISITOS ESTRUCTURALES Y DE FORMATO (OBLIGATORIOS):**
+1. **Completar los Metadatos YAML Frontmatter:** Si hay metadatos faltantes, incompletos o genéricos (como teaser, category o coverImage), **calcúlalos y delégalos tú mismo**. Genera un teaser (resumen gancho de una sola oración para la grilla de la web, máx 150 caracteres) súper atractivo, asocia una ruta lógica de imagen de portada relevante y en minúsculas (ej: /images/portada-atencion.jpg) y determina si pertenece a la dimensión 'pasado', 'presente' o 'futuro'.
+2. **Estructura YAML exacta:** Devuelve un bloque YAML Frontmatter exacto al inicio del documento:
+---
+title: "${currentTitle}"
+author: "${defaultAuthor}"
+date: "${frontmatterData.date || getTodayISODate()}"
+category: "${frontmatterData.category || 'futuro'}"
+coverImage: "${frontmatterData.coverImage && frontmatterData.coverImage !== '/images/portada-ia.jpg' ? frontmatterData.coverImage : '/images/portada-[palabra-clave].jpg'}"
+teaser: "[Escribe un resumen gancho de una sola oración para la grilla de la web, máx 150 caracteres]"
+published: ${frontmatterData.published || 'true'}
+---
+
+3. **Desarrollar y Pulir el Contenido:** Toma las notas iniciales o el título y expándelas en un artículo completo, fluido, poético y teológico propio de Moed. Si hay pocas notas o esbozos iniciales, dedícate a expandir la tesis principal con erudición bíblica, teológica y tecnológica profunda.
+4. **NO Duplicar el Título:** El cuerpo del artículo debe comenzar inmediatamente después de los metadatos YAML. **NO debes incluir ningún encabezado principal de primer nivel (# Título) para el título en el cuerpo**, ya que el título se gestiona exclusivamente en los metadatos YAML.
+5. Utiliza excelente jerarquía Markdown: encabezados secundarios (## Subtítulo) para secciones clave y encabezados terciarios (### Sub-sección) si es necesario.
+6. Incluye al menos un bloque de cita destacado (> "Cita destacada en cursiva").
+7. Utiliza formato enriquecido: negritas (**texto**), listas con viñetas (- ítem) y marcas destacadas (==resaltado==) para pasajes clave.
+${voiceInstructionsSection}
+
+Genera únicamente el código Markdown del artículo completo, sin añadir comentarios, explicaciones, ni etiquetas contenedoras adicionales al principio o al final (como \`\`\`markdown).`;
+
+  const overlay = document.getElementById('magic-ai-loading-overlay');
+  const loadingPhaseText = document.getElementById('magic-ai-loading-phase');
+  
+  if (overlay) {
+    overlay.style.display = 'flex';
+    setTimeout(() => { overlay.classList.add('visible'); }, 20);
   }
-  
-  // Save key
-  localStorage.setItem('moed_gemini_api_key', apiKey);
-  
-  const promptText = generatePromptText();
-  const btn = document.getElementById('btn-ai-generate');
-  const loader = document.getElementById('ai-loading-container');
-  const loadingText = document.getElementById('ai-loading-text');
-  
-  // Show loading
-  btn.style.display = 'none';
-  loader.classList.remove('hidden');
   
   const loadingPhases = [
-    "Iniciando conexión con Google Gemini...",
-    "Transmitiendo parámetros de redacción (Idea, Tono, Dimensión)...",
-    "El espíritu tecnológico está redactando el artículo...",
-    "Estructurando YAML Frontmatter and citas destacadas...",
-    "Importando resultado directamente al lienzo..."
+    "Hilando las primeras notas...",
+    "Invocando al Espíritu Tecnológico...",
+    "Analizando el título y calculando metadatos...",
+    "Escribiendo prosa enriquecida en base a tu borrador...",
+    "Calculando teaser y asociando imagen de portada...",
+    "Importando la sabiduría de la IA al lienzo de Moed..."
   ];
   
   let phaseIdx = 0;
-  loadingText.textContent = loadingPhases[0];
+  if (loadingPhaseText) loadingPhaseText.textContent = loadingPhases[0];
   const phaseInterval = setInterval(() => {
     phaseIdx = (phaseIdx + 1) % loadingPhases.length;
-    loadingText.textContent = loadingPhases[phaseIdx];
-  }, 4000);
+    if (loadingPhaseText) loadingPhaseText.textContent = loadingPhases[phaseIdx];
+  }, 3200);
+  
+  // Setup AbortController for cancellation pipeline
+  magicAiAbortController = new AbortController();
   
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
+      signal: magicAiAbortController.signal,
       body: JSON.stringify({
         contents: [{
           parts: [{
@@ -1616,23 +1637,394 @@ document.getElementById('btn-ai-generate').addEventListener('click', async () =>
     const data = await response.json();
     let markdown = data.candidates[0].content.parts[0].text;
     
-    // Strip markdown fence markers if the model included them (e.g. ```markdown ... ```)
+    markdown = markdown.replace(/^```markdown\s*/i, '').replace(/^```\s*/, '').replace(/```\s*$/, '');
+    
+    markdown = markdown.replace(/\/images\/portada-\[palabra-clave\]\.jpg/gi, () => {
+      const slug = slugify(currentTitle);
+      return `/images/portada-${slug.substring(0, 15)}.jpg`;
+    });
+    
+    importMarkdownIntoEditor(markdown);
+    
+    if (overlay) {
+      overlay.classList.remove('visible');
+      setTimeout(() => { overlay.style.display = 'none'; }, 350);
+    }
+    
+    flashSaveButtonSuccess();
+    
+    const visualTitleNode = document.getElementById('visual-editor-title');
+    if (visualTitleNode) {
+      visualTitleNode.style.textShadow = '0 0 15px rgba(168, 85, 247, 0.4)';
+      setTimeout(() => { visualTitleNode.style.textShadow = ''; }, 2000);
+    }
+  } catch (err) {
+    if (overlay) {
+      overlay.classList.remove('visible');
+      setTimeout(() => { overlay.style.display = 'none'; }, 350);
+    }
+    
+    // Silence AbortError visually and return cleanly to canvas
+    if (err.name === 'AbortError') {
+      console.log('Gemini Magic AI completion successfully aborted by the user.');
+      return;
+    }
+    
+    alert('Error al completar el borrador con IA: ' + err.message);
+    
+    openAiModal();
+    const geminiTabBtn = document.querySelector('.ai-tab-btn[data-tab="gemini"]');
+    if (geminiTabBtn) geminiTabBtn.click();
+  } finally {
+    clearInterval(phaseInterval);
+    magicAiAbortController = null;
+  }
+}
+
+// Centralized Spelling & Grammar IA Correction Engine (One-Click, Non-destructive)
+async function triggerMagicSpellingCorrection() {
+  const apiKey = localStorage.getItem('moed_gemini_api_key') || '';
+  
+  if (!apiKey.trim()) {
+    openAiModal();
+    const geminiTabBtn = document.querySelector('.ai-tab-btn[data-tab="gemini"]');
+    if (geminiTabBtn) geminiTabBtn.click();
+    
+    const geminiInput = document.getElementById('ai-gemini-key');
+    if (geminiInput) {
+      geminiInput.focus();
+      geminiInput.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+      setTimeout(() => { geminiInput.style.borderColor = ''; }, 2000);
+    }
+    
+    alert('Introduce tu Gemini API Key en la pestaña de configuración para activar el corrector con IA.');
+    return;
+  }
+  
+  ensureSourceSyncedFromCanvas();
+  
+  const rawText = sourceEditor.value;
+  
+  const overlay = document.getElementById('magic-ai-loading-overlay');
+  const loadingPhaseText = document.getElementById('magic-ai-loading-phase');
+  
+  if (overlay) {
+    overlay.style.display = 'flex';
+    setTimeout(() => { overlay.classList.add('visible'); }, 20);
+  }
+  
+  const loadingPhases = [
+    "Analizando ortografía y acentuación...",
+    "Puliendo sintaxis y comas...",
+    "Preservando tu pluma y estilo original...",
+    "Inyectando corrección ortográfica premium..."
+  ];
+  
+  let phaseIdx = 0;
+  if (loadingPhaseText) loadingPhaseText.textContent = loadingPhases[0];
+  const phaseInterval = setInterval(() => {
+    phaseIdx = (phaseIdx + 1) % loadingPhases.length;
+    if (loadingPhaseText) loadingPhaseText.textContent = loadingPhases[phaseIdx];
+  }, 2600);
+  
+  // Setup AbortController for cancellation pipeline
+  magicAiAbortController = new AbortController();
+  
+  // Strict non-destructive correction prompt
+  const promptText = `Eres un editor y corrector de estilo profesional para **Moed**. Tu única tarea es corregir de forma impecable cualquier error de ortografía, gramática, puntuación y coherencia sintáctica en el siguiente texto Markdown.
+
+**REGLAS ESTRICTAS (OBLIGATORIAS):**
+1. **NO ALTERES LA ESTRUCTURA NI EL CONTENIDO:** No agregues nuevos párrafos, no resumas, no quites secciones, no inventes ideas nuevas. Conserva el 100% de la tesis, citas y estructura lógica del autor.
+2. **NO DUPLICAR EL TÍTULO H1:** Mantén el cuerpo de Markdown libre de encabezados H1 duplicados en la respuesta.
+3. **PRESERVA EL YAML FRONTMATTER EXACTAMENTE IGUAL:** Si el texto incluye una cabecera de metadatos YAML (delimitada por ---), devuélvela exactamente en el mismo formato, con las mismas propiedades y valores, sin modificarlos.
+4. Corrige tildes, comas, concordancias de género/número, errores de tipeo y pulidos menores de estilo para lograr una lectura profesional y fluida de alta costura, pero siempre respetando la voz y palabras del autor.
+
+Genera únicamente el código Markdown del artículo corregido, sin añadir comentarios, explicaciones, ni etiquetas contenedoras adicionales al principio o al final (como \`\`\`markdown).
+
+**TEXTO A CORREGIR:**
+${rawText}`;
+
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      signal: magicAiAbortController.signal,
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: promptText
+          }]
+        }]
+      })
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || 'Error en la API de Gemini');
+    }
+    
+    const data = await response.json();
+    let markdown = data.candidates[0].content.parts[0].text;
+    
     markdown = markdown.replace(/^```markdown\s*/i, '').replace(/^```\s*/, '').replace(/```\s*$/, '');
     
     importMarkdownIntoEditor(markdown);
     
-    // Success
-    closeAiModal();
+    if (overlay) {
+      overlay.classList.remove('visible');
+      setTimeout(() => { overlay.style.display = 'none'; }, 350);
+    }
+    
     flashSaveButtonSuccess();
-    setTimeout(() => alert('¡Artículo generado y cargado con éxito en el editor!'), 100);
   } catch (err) {
-    alert('Error al generar el artículo: ' + err.message);
+    if (overlay) {
+      overlay.classList.remove('visible');
+      setTimeout(() => { overlay.style.display = 'none'; }, 350);
+    }
+    
+    // Silence AbortError visually and return cleanly to canvas
+    if (err.name === 'AbortError') {
+      console.log('Gemini Spelling Correction successfully aborted by the user.');
+      return;
+    }
+    
+    alert('Error al corregir el borrador con IA: ' + err.message);
+    
+    openAiModal();
+    const geminiTabBtn = document.querySelector('.ai-tab-btn[data-tab="gemini"]');
+    if (geminiTabBtn) geminiTabBtn.click();
   } finally {
     clearInterval(phaseInterval);
-    loader.classList.add('hidden');
-    btn.style.display = '';
+    magicAiAbortController = null;
   }
-});
+}
+
+// Smart Context-Aware Frontmatter Metadata AI Assistant (Autocomplete + Orthographic Correction)
+async function triggerFrontmatterAiCompletion() {
+  const apiKey = localStorage.getItem('moed_gemini_api_key') || '';
+  
+  if (!apiKey.trim()) {
+    openAiModal();
+    const geminiTabBtn = document.querySelector('.ai-tab-btn[data-tab="gemini"]');
+    if (geminiTabBtn) geminiTabBtn.click();
+    
+    const geminiInput = document.getElementById('ai-gemini-key');
+    if (geminiInput) {
+      geminiInput.focus();
+      geminiInput.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+      setTimeout(() => { geminiInput.style.borderColor = ''; }, 2000);
+    }
+    
+    alert('Introduce tu Gemini API Key en la pestaña de configuración para activar el asistente de metadatos.');
+    return;
+  }
+  
+  ensureSourceSyncedFromCanvas();
+  
+  const rawText = sourceEditor.value;
+  const parsed = parseYAMLFrontmatter(rawText);
+  const articleBody = parsed.content || '';
+  
+  // Read current metadata fields values and establish whether they are default or empty
+  const currentTitle = (document.getElementById('meta-title').value || '').trim();
+  const currentAuthor = (document.getElementById('meta-author').value || '').trim();
+  const currentDate = (document.getElementById('meta-date').value || '').trim();
+  const currentCategory = document.getElementById('meta-category').value;
+  const currentCover = (document.getElementById('meta-cover').value || '').trim();
+  const currentTeaser = (document.getElementById('meta-teaser').value || '').trim();
+
+  // Create instructions for each field
+  const titleInstruction = (!currentTitle || currentTitle === 'Título del Artículo')
+    ? "CAMPO VACÍO: Genera un título poético, teológico y atractivo basado en el contenido del artículo."
+    : `CAMPO CON CONTENIDO: Realiza una corrección quirúrgica de ortografía, gramática y tildes en el título: "${currentTitle}" respetando la idea original.`;
+
+  const authorInstruction = (!currentAuthor || currentAuthor === 'Comunidad Moed')
+    ? "CAMPO VACÍO: Usa la firma predeterminada configurada."
+    : `CAMPO CON CONTENIDO: Mantén el autor "${currentAuthor}" y realiza corrección ortográfica si es un nombre propio.`;
+
+  const teaserInstruction = (!currentTeaser || currentTeaser === 'Breve resumen introductorio para la grilla...' || currentTeaser === 'Breve resumen introductorio para captar la atención del lector en la grilla...')
+    ? "CAMPO VACÍO: Genera un teaser (resumen-gancho) sumamente atractivo de una sola oración para captar la atención del lector en la grilla, de máximo 150 caracteres."
+    : `CAMPO CON CONTENIDO: Realiza corrección quirúrgica de ortografía, gramática, comas y puntuación en el teaser: "${currentTeaser}" respetando al 100% la idea original.`;
+
+  const categoryInstruction = (!currentCategory || currentCategory === 'futuro')
+    ? "CAMPO VACÍO: Determina si pertenece a la dimensión 'pasado' (raíces espirituales), 'presente' (respuestas prácticas) o 'futuro' (tecnología y profecía) basado en el contenido."
+    : `CAMPO CON CONTENIDO: Mantén exactamente el valor: "${currentCategory}".`;
+
+  const coverInstruction = (!currentCover || currentCover === '/images/portada-ia.jpg' || currentCover === '')
+    ? "CAMPO VACÍO: Sugiere una ruta lógica de imagen de portada relevante y en minúsculas basada en el slug del título (ej: /images/portada-atencion.jpg)."
+    : `CAMPO CON CONTENIDO: Mantén exactamente el valor: "${currentCover}".`;
+
+  const promptText = `Eres un editor técnico y teólogo experto para **Moed**. Tu tarea es analizar el cuerpo del artículo y autocompletar o corregir los campos del bloque de metadatos YAML de manera no destructiva, siguiendo estrictamente las instrucciones para cada campo:
+
+**CUERPO DEL ARTÍCULO:**
+${articleBody}
+
+**INSTRUCCIONES ESPECÍFICAS CAMPO POR CAMPO:**
+- TÍTULO: ${titleInstruction}
+- AUTOR: ${authorInstruction}
+- TEASER: ${teaserInstruction}
+- DIMENSIÓN (CATEGORÍA): ${categoryInstruction}
+- PORTADA (COVERIMAGE): ${coverInstruction}
+- FECHA: ${!currentDate ? "CAMPO VACÍO: Usa la fecha actual en formato AAAA-MM-DD." : `CAMPO CON CONTENIDO: Mantén exactamente la fecha: "${currentDate}".`}
+
+**REGLAS OBLIGATORIAS:**
+1. Debes devolver la respuesta estrictamente en un formato JSON plano válido. No incluyas explicaciones de texto, comentarios ni bloques contenedores markdown del tipo \`\`\`json. Solo el objeto JSON estructurado.
+2. Claves JSON esperadas: "title", "author", "date", "category", "coverImage", "teaser", "published".
+3. "published" debe ser exactamente "${frontmatterData.published || 'true'}".
+4. Si se requiere corrección de ortografía en un campo con contenido, respeta la idea y las palabras del usuario, corrigiendo únicamente errores sintácticos, de tipeo y acentuación.
+
+Ejemplo de respuesta esperada:
+{
+  "title": "El Shabat de los algoritmos",
+  "author": "Comunidad Moed",
+  "date": "2026-05-23",
+  "category": "futuro",
+  "coverImage": "/images/portada-shabat-algoritmos.jpg",
+  "teaser": "Un análisis profundo sobre cómo el scroll constante desgasta la contemplación interior.",
+  "published": "true"
+}`;
+
+  const overlay = document.getElementById('magic-ai-loading-overlay');
+  const loadingPhaseText = document.getElementById('magic-ai-loading-phase');
+  
+  if (overlay) {
+    overlay.style.display = 'flex';
+    setTimeout(() => { overlay.classList.add('visible'); }, 20);
+  }
+  
+  const loadingPhases = [
+    "Analizando el cuerpo del artículo...",
+    "Clasificando la dimensión espiritual...",
+    "Destilando el teaser ideal...",
+    "Revisando ortografía y gramática en tus metadatos...",
+    "Generando sugerencias de portada..."
+  ];
+  
+  let phaseIdx = 0;
+  if (loadingPhaseText) loadingPhaseText.textContent = loadingPhases[0];
+  const phaseInterval = setInterval(() => {
+    phaseIdx = (phaseIdx + 1) % loadingPhases.length;
+    if (loadingPhaseText) loadingPhaseText.textContent = loadingPhases[phaseIdx];
+  }, 2400);
+  
+  magicAiAbortController = new AbortController();
+  
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      signal: magicAiAbortController.signal,
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: promptText
+          }]
+        }]
+      })
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || 'Error en la API de Gemini');
+    }
+    
+    const data = await response.json();
+    let jsonText = data.candidates[0].content.parts[0].text;
+    
+    // Clean potential markdown blocks injected by Gemini
+    jsonText = jsonText.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/```\s*$/, '').trim();
+    
+    const metaSuggestions = JSON.parse(jsonText);
+    
+    // Update frontmatterData state and input fields dynamically
+    frontmatterData.title = metaSuggestions.title || frontmatterData.title;
+    frontmatterData.author = metaSuggestions.author || frontmatterData.author;
+    frontmatterData.date = metaSuggestions.date || frontmatterData.date;
+    frontmatterData.category = metaSuggestions.category || frontmatterData.category;
+    frontmatterData.coverImage = metaSuggestions.coverImage || frontmatterData.coverImage;
+    frontmatterData.teaser = metaSuggestions.teaser || frontmatterData.teaser;
+    frontmatterData.published = String(metaSuggestions.published || frontmatterData.published || 'true');
+    
+    // Re-generate suggested coverImage if slug placeholder remains
+    if (frontmatterData.coverImage.includes('[palabra-clave]')) {
+      const slug = slugify(frontmatterData.title);
+      frontmatterData.coverImage = `/images/portada-${slug.substring(0, 15)}.jpg`;
+    }
+    
+    syncFrontmatterFieldsToInputs();
+    
+    // Direct sync metadata title to design editor H1 live
+    const visualTitle = document.getElementById('visual-editor-title');
+    if (visualTitle) visualTitle.textContent = frontmatterData.title;
+
+    // Combine YAML with original untouched body text
+    const updatedYaml = generateYAMLFrontmatter();
+    sourceEditor.value = updatedYaml + articleBody;
+    
+    // Re-sync Design Canvas visuals safely without altering layout
+    synchronizeSourceToCanvas();
+    isDirty = true;
+    updateStatusDisplay();
+    
+    // Save to undo history pipeline
+    historyStates.push(sourceEditor.value);
+    historyIndex = historyStates.length - 1;
+    updateHistoryButtons();
+    
+    if (overlay) {
+      overlay.classList.remove('visible');
+      setTimeout(() => { overlay.style.display = 'none'; }, 350);
+    }
+    
+    flashSaveButtonSuccess();
+  } catch (err) {
+    if (overlay) {
+      overlay.classList.remove('visible');
+      setTimeout(() => { overlay.style.display = 'none'; }, 350);
+    }
+    
+    if (err.name === 'AbortError') {
+      console.log('Gemini Frontmatter Autocomplete successfully aborted by the user.');
+      return;
+    }
+    
+    alert('Error al autocompletar metadatos con IA: ' + err.message);
+    
+    openAiModal();
+    const geminiTabBtn = document.querySelector('.ai-tab-btn[data-tab="gemini"]');
+    if (geminiTabBtn) geminiTabBtn.click();
+  } finally {
+    clearInterval(phaseInterval);
+    magicAiAbortController = null;
+  }
+}
+
+// Wire up events
+const globalSettingsBtn = document.getElementById('btn-global-settings');
+if (globalSettingsBtn) globalSettingsBtn.addEventListener('click', openAiModal);
+
+const cancelMagicAiBtn = document.getElementById('btn-cancel-magic-ai');
+if (cancelMagicAiBtn) {
+  cancelMagicAiBtn.addEventListener('click', () => {
+    if (magicAiAbortController) {
+      magicAiAbortController.abort();
+    }
+  });
+}
+
+const closeAiBtn = document.getElementById('close-ai-btn');
+if (closeAiBtn) closeAiBtn.addEventListener('click', closeAiModal);
+
+const aiModal = document.getElementById('ai-modal');
+if (aiModal) {
+  aiModal.addEventListener('click', (e) => {
+    if (e.target === aiModal) closeAiModal();
+  });
+}
 
 // 🌗 THEME SYSTEM: Light/Dark Mode Manager
 function setupThemeSystem() {
@@ -1683,8 +2075,98 @@ window.addEventListener('DOMContentLoaded', () => {
   
   // Load saved API Key if exists
   const savedKey = localStorage.getItem('moed_gemini_api_key');
-  if (savedKey) {
-    document.getElementById('ai-api-key').value = savedKey;
+  const geminiKeyInput = document.getElementById('ai-gemini-key');
+  if (savedKey && geminiKeyInput) {
+    geminiKeyInput.value = savedKey;
+  }
+
+  if (geminiKeyInput) {
+    geminiKeyInput.addEventListener('input', (e) => {
+      localStorage.setItem('moed_gemini_api_key', e.target.value.trim());
+    });
+  }
+
+  // Handle saving Gemini key through dedicated modal button
+  const saveGeminiKeyBtn = document.getElementById('btn-save-gemini-key');
+  if (saveGeminiKeyBtn) {
+    saveGeminiKeyBtn.addEventListener('click', () => {
+      const val = (document.getElementById('ai-gemini-key').value || '').trim();
+      if (!val) {
+        alert('Por favor, introduce tu Gemini API Key.');
+        return;
+      }
+      localStorage.setItem('moed_gemini_api_key', val);
+      
+      saveGeminiKeyBtn.textContent = '✔ ¡Clave Guardada!';
+      saveGeminiKeyBtn.style.background = '#10B981';
+      
+      setTimeout(() => {
+        saveGeminiKeyBtn.innerHTML = '✔ Guardar Clave de Google Gemini';
+        saveGeminiKeyBtn.style.background = '';
+        closeAiModal();
+      }, 1500);
+    });
+  }
+
+  // Load default Author Voice custom parameters if saved
+  const voiceAuthorInput = document.getElementById('ai-voice-author');
+  const voiceToneSelect = document.getElementById('ai-voice-tone');
+  const voiceInstTextarea = document.getElementById('ai-voice-instructions');
+  
+  const savedAuthor = localStorage.getItem('moed_default_author');
+  const savedTone = localStorage.getItem('moed_default_tone');
+  const savedVoiceStyle = localStorage.getItem('moed_ai_voice_style');
+  
+  if (savedAuthor && voiceAuthorInput) voiceAuthorInput.value = savedAuthor;
+  if (savedTone && voiceToneSelect) voiceToneSelect.value = savedTone;
+  if (savedVoiceStyle && voiceInstTextarea) voiceInstTextarea.value = savedVoiceStyle;
+
+  // Handle saving Custom Author Voice configurations
+  const saveVoiceBtn = document.getElementById('btn-save-voice');
+  if (saveVoiceBtn) {
+    saveVoiceBtn.addEventListener('click', () => {
+      const authorVal = (document.getElementById('ai-voice-author').value || '').trim();
+      const toneVal = document.getElementById('ai-voice-tone').value;
+      const instVal = (document.getElementById('ai-voice-instructions').value || '').trim();
+      
+      localStorage.setItem('moed_default_author', authorVal);
+      localStorage.setItem('moed_default_tone', toneVal);
+      localStorage.setItem('moed_ai_voice_style', instVal);
+      
+      // Update global frontmatter metadata author dynamically if it is generic
+      if (frontmatterData.author === 'Comunidad Moed' && authorVal) {
+        frontmatterData.author = authorVal;
+        const metaAuthorInput = document.getElementById('meta-author');
+        if (metaAuthorInput) metaAuthorInput.value = authorVal;
+        synchronizeCanvasToSource();
+      }
+      
+      saveVoiceBtn.textContent = '✔ ¡Preferencias Guardadas!';
+      saveVoiceBtn.style.background = '#10B981';
+      
+      setTimeout(() => {
+        saveVoiceBtn.innerHTML = '✔ Guardar Preferencias de Voz';
+        saveVoiceBtn.style.background = '';
+        closeAiModal();
+      }, 1500);
+    });
+  }
+
+  // Bind direct Magic AI One-Click Completion triggers
+  const magicAiBtn = document.getElementById('btn-magic-ai');
+  if (magicAiBtn) {
+    magicAiBtn.addEventListener('click', triggerMagicAiCompletion);
+  }
+
+  const frontmatterAiBtn = document.getElementById('btn-frontmatter-ai');
+  if (frontmatterAiBtn) {
+    frontmatterAiBtn.addEventListener('click', triggerFrontmatterAiCompletion);
+  }
+
+  // Bind direct Spelling corrector trigger
+  const fixSpellingBtn = document.getElementById('btn-fix-spelling');
+  if (fixSpellingBtn) {
+    fixSpellingBtn.addEventListener('click', triggerMagicSpellingCorrection);
   }
   
   if (cached) isDirty = true;

@@ -70,7 +70,7 @@ let articles = Object.entries(rawArticles).map(([filePath, module]) => {
     category: parsed.metadata.category || 'futuro',
     published: parsed.metadata.published || 'true',
     readTime: calculatedReadTime,
-    coverImage: parsed.metadata.coverImage || '/images/portada-ia.jpg',
+    coverImage: parsed.metadata.coverImage || '',
     teaser: parsed.metadata.teaser || 'Resumen introductorio...',
     rawContent: rawText // Kept in memory for instant 0ms reader opening
   };
@@ -200,7 +200,7 @@ async function setupArticleHub() {
             category: parsed.metadata.category || 'futuro',
             published: parsed.metadata.published || 'true',
             readTime: calculatedReadTime,
-            coverImage: parsed.metadata.coverImage || '/images/portada-ia.jpg',
+            coverImage: parsed.metadata.coverImage || '',
             teaser: parsed.metadata.teaser || 'Resumen introductorio...',
             rawContent: item.content
           };
@@ -438,6 +438,11 @@ async function setupArticleHub() {
       }
 
       if (trimmed.startsWith('# ')) {
+        const headerText = trimmed.slice(2).trim();
+        // Skip rendering if it matches the main metadata title to avoid a double title in the reader
+        if (headerText.toLowerCase() === (metadata.title || '').trim().toLowerCase()) {
+          continue;
+        }
         htmlContent += `<h1 class="font-display font-black text-2xl md:text-4xl text-white mb-6 mt-2 leading-tight">${compileInlineStyles(trimmed.slice(2))}</h1>`;
       } else if (trimmed.startsWith('## ')) {
         htmlContent += `<h2 class="font-display font-extrabold text-xl md:text-2xl text-white mb-4 mt-8 border-l-2 border-future-500 pl-4">${compileInlineStyles(trimmed.slice(3))}</h2>`;
@@ -457,7 +462,8 @@ async function setupArticleHub() {
     if (inList) flushList();
 
     // 3. Prepend beautiful header layout
-    const coverHtml = metadata.coverImage ? `
+    const hasCoverImage = metadata.coverImage && metadata.coverImage.trim() !== '' && metadata.coverImage !== 'none';
+    const coverHtml = hasCoverImage ? `
       <div class="w-full h-48 md:h-64 rounded-2xl overflow-hidden mb-6 border border-white/10 shadow-lg relative">
         <img src="${metadata.coverImage}" alt="${metadata.title}" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"></div>
