@@ -163,6 +163,25 @@ body.drag-invalid { border-color: #EF4444; }
 }
 .btn-label { line-height: 1; }
 
+/* IA badge — replaces SVG icon in AI buttons */
+.btn-ai-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(139, 92, 246, 0.25);
+  color: #c4b5fd;
+  border: 1px solid rgba(139, 92, 246, 0.45);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+
 .exit-btn {
   border-color: rgba(255, 255, 255, 0.05);
   color: var(--text-editor);
@@ -975,18 +994,99 @@ body.light-mode .exit-btn:hover {
   }
 }
 
+/* ─── Desktop: drawer always visible, Aa toggle hidden ─── */
+#format-tools-drawer {
+  display: flex;
+}
+
+#btn-format-toggle {
+  display: none;
+}
+
 @media (max-width: 768px) {
   #top-navbar {
     padding: 8px 16px;
   }
   
   #formatting-bar {
-    padding: 6px 12px;
+    padding: 4px 8px;
+    flex-direction: column;
+    gap: 0;
   }
-  
+
+  /* Main row: always visible — Aa + Meta + AI */
+  .formatting-main-row {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    gap: 6px;
+    padding: 4px 0;
+    align-items: center;
+  }
+
+  .formatting-main-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Show Aa toggle button on mobile */
+  #btn-format-toggle {
+    display: inline-flex;
+    flex-shrink: 0;
+    border-color: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  #btn-format-toggle.active {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: rgba(139, 92, 246, 0.5);
+    color: #e9d5ff;
+  }
+
+  /* Collapsible format drawer */
+  #format-tools-drawer {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    gap: 8px;
+    width: 100%;
+    padding: 0 0;
+    /* Collapsed state */
+    max-height: 0;
+    overflow-y: hidden;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: max-height 0.28s cubic-bezier(0.4,0,0.2,1),
+                opacity 0.22s ease,
+                padding 0.22s ease;
+    border-top: 0px solid var(--border-color);
+  }
+
+  #format-tools-drawer::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Expanded state when drawer is open */
+  #format-tools-drawer.open {
+    max-height: 60px;
+    opacity: 1;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border-top: 1px solid var(--border-color);
+  }
+
   /* Make the formatting ribbon horizontally swipeable on mobile screens */
   .formatting-container {
     justify-content: flex-start;
+    flex-wrap: nowrap !important; /* Fix wrap bug to enable horizontal scroll */
     overflow-x: auto;
     width: 100%;
     padding: 4px 2px;
@@ -1003,6 +1103,69 @@ body.light-mode .exit-btn:hover {
   
   .formatting-container .button-group {
     flex-shrink: 0;
+  }
+
+  /* Maximize text editing area on mobile by reducing side margins/paddings */
+  body.state-design #design-wrapper,
+  body.state-split #design-wrapper {
+    padding: 24px 16px !important;
+  }
+  
+  #source-editor {
+    padding: 20px 16px !important;
+  }
+
+  /* Automatically hide the status bar (footer) when the virtual keyboard opens */
+  @media (max-height: 580px) {
+    #editor-status-bar {
+      display: none !important;
+    }
+  }
+
+  /* Show the mobile dropdown actions trigger button */
+  #btn-more-actions {
+    display: inline-flex !important;
+  }
+
+  /* Restructure the button group container into a gorgeous glassmorphism floating menu */
+  #more-actions-menu {
+    position: absolute;
+    top: 56px;
+    right: 16px;
+    flex-direction: column;
+    background: var(--bg-panel);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-color-active);
+    border-radius: 14px;
+    padding: 6px;
+    gap: 4px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(168, 85, 247, 0.15);
+    z-index: 150;
+    display: none;
+  }
+
+  #more-actions-menu.active {
+    display: flex !important;
+  }
+
+  #more-actions-menu .action-btn {
+    width: 100%;
+    justify-content: flex-start;
+    border: none !important;
+    background: transparent !important;
+    padding: 8px 16px;
+    box-shadow: none !important;
+    border-radius: 8px;
+  }
+
+  #more-actions-menu .action-btn:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  /* Hide Split View tab on mobile since split screen is unusable on narrow viewports */
+  [data-mode="state-split"] {
+    display: none !important;
   }
 }
 
@@ -1168,6 +1331,99 @@ body.light-mode #btn-global-settings:hover {
   color: var(--accent-future) !important;
   background: rgba(168, 85, 247, 0.05) !important;
   box-shadow: 0 2px 8px rgba(168, 85, 247, 0.12) !important;
+}
+
+/* Enable File dropdown actions trigger on all screen sizes */
+#btn-more-actions {
+  display: inline-flex;
+}
+
+/* =========================================================================
+   Premium File Dropdown Card Styles (Desktop & Mobile)
+   ========================================================================= */
+
+.dropdown-card {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  left: 0 !important;
+  display: none;
+  flex-direction: column !important;
+  background: #070a13 !important; /* Completely solid dark OLED black */
+  border: 1px solid var(--border-color-active) !important;
+  border-radius: 14px !important;
+  padding: 8px !important;
+  gap: 4px !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(168, 85, 247, 0.15) !important;
+  z-index: 150 !important;
+  min-width: 295px !important;
+  backdrop-filter: none !important; /* Disable transparency */
+  -webkit-backdrop-filter: none !important;
+}
+
+#more-actions-menu.active {
+  display: flex !important;
+}
+
+/* Dropdown Card Action Buttons */
+.dropdown-card .action-btn {
+  width: 100% !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 10px 14px !important;
+  box-shadow: none !important;
+  border-radius: 10px !important;
+  gap: 12px !important;
+  text-align: left !important;
+}
+
+.dropdown-card .action-btn:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #FFFFFF !important;
+}
+
+.dropdown-card .action-btn svg {
+  width: 18px !important;
+  height: 18px !important;
+  color: var(--accent-future) !important;
+}
+
+/* Title and Description Text in Dropdown Items */
+.menu-item-text {
+  display: flex !important;
+  flex-direction: column !important;
+  line-height: 1.35 !important;
+}
+
+.menu-item-title {
+  font-family: var(--font-sans) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #FFFFFF !important;
+}
+
+.menu-item-desc {
+  font-family: var(--font-sans) !important;
+  font-size: 10px !important;
+  color: var(--text-muted) !important;
+  font-weight: 400 !important;
+  margin-top: 1px !important;
+}
+
+/* Premium Light Mode Overrides for Dropdown Card */
+body.light-mode .dropdown-card {
+  background: #ffffff !important;
+  border-color: rgba(168, 85, 247, 0.25) !important;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12), 0 0 20px rgba(168, 85, 247, 0.05) !important;
+}
+
+body.light-mode .menu-item-title {
+  color: #0f172a !important;
+}
+
+body.light-mode .dropdown-card .action-btn:hover {
+  background: rgba(15, 23, 42, 0.04) !important;
 }
 
 

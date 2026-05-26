@@ -32,53 +32,110 @@
     </div>
 
     <div class="nav-section right-nav">
-      <!-- File Actions -->
-      <div class="button-group">
-        <button class="action-btn" id="btn-new" title="Nuevo documento (Ctrl+N)">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-          <span class="btn-label">Nuevo</span>
+      <!-- File Dropdown Wrapper (Always relative for bulletproof alignment) -->
+      <div class="dropdown-wrapper" style="position: relative; display: inline-block;">
+        <!-- Dropdown Menu Trigger (Called "File", placed before Save) -->
+        <button id="btn-more-actions" class="action-btn" title="Acciones de Archivo" style="gap: 6px; border-color: rgba(168, 85, 247, 0.25);">
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          <span style="font-weight: 600;">File</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2.5; margin-left: 2px;"><path d="m6 9 6 6 6-6"/></svg>
         </button>
-        <button class="action-btn" id="btn-open" title="Abrir (Local/Nube)">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16a1 1 0 0 0 1-1V8H3v10a1 1 0 0 0 1 1z"/><path d="M9 8V5l3-3 3 3v3"/></svg>
-          <span class="btn-label">Abrir</span>
-        </button>
-        <button class="action-btn" id="btn-save" title="Guardar (Ctrl+S)">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
-          <span class="btn-label">Guardar</span>
-        </button>
-        <button class="action-btn" id="btn-export" title="Exportar .md local">
-          <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke: #38bdf8;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-          <span class="btn-label">Exportar</span>
-        </button>
-        <button class="action-btn" id="btn-publish" title="Publicar en Vercel (GitHub)" style="border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); color: #34d399;">
-          <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke: currentColor;"><path d="M12 2v20M17 5l-5-5-5 5M2 17h20"/></svg>
-          <span class="btn-label" style="font-weight: 600;">Publicar</span>
-        </button>
+
+        <!-- Dropdown Menu Actions (Solid, non-transparent background dropdown card) -->
+        <div id="more-actions-menu" class="button-group dropdown-card">
+          <button class="action-btn" id="btn-new" title="Nuevo documento (Ctrl+N)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            <div class="menu-item-text">
+              <span class="menu-item-title">Nuevo</span>
+              <span class="menu-item-desc">Crear un documento vacío y limpio</span>
+            </div>
+          </button>
+          <button class="action-btn" id="btn-open" title="Abrir (Local/Nube)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16a1 1 0 0 0 1-1V8H3v10a1 1 0 0 0 1 1z"/><path d="M9 8V5l3-3 3 3v3"/></svg>
+            <div class="menu-item-text">
+              <span class="menu-item-title">Abrir</span>
+              <span class="menu-item-desc">Cargar un archivo .md de PC o nube</span>
+            </div>
+          </button>
+          <button class="action-btn" id="btn-export" title="Exportar .md local">
+            <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke: #38bdf8;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            <div class="menu-item-text">
+              <span class="menu-item-title">Exportar</span>
+              <span class="menu-item-desc">Descargar copia .md de inmediato</span>
+            </div>
+          </button>
+          <button class="action-btn" id="btn-publish" title="Publicar en Vercel (GitHub)" style="border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); color: #34d399;">
+            <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke: currentColor;"><path d="M12 2v20M17 5l-5-5-5 5M2 17h20"/></svg>
+            <div class="menu-item-text">
+              <span class="menu-item-title" style="color: #34d399;">Publicar</span>
+              <span class="menu-item-desc">Subir y publicar cambios en vivo</span>
+            </div>
+          </button>
+          
+          <!-- Theme Switcher integrated in the dropdown group -->
+          <button id="theme-toggle" class="action-btn" title="Cambiar Tema (Claro/Oscuro)">
+            <svg id="theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true" style="stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            <svg id="theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true" class="hidden" style="stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+            <div class="menu-item-text">
+              <span class="menu-item-title">Alternar Tema</span>
+              <span class="menu-item-desc">Cambiar entre tema claro y oscuro</span>
+            </div>
+          </button>
+        </div>
       </div>
 
-      <!-- Workspace View Modes -->
+      <!-- Standalone Save Button (Always visible) -->
+      <button class="action-btn" id="btn-save" title="Guardar (Ctrl+S)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+        <span class="btn-label">Guardar</span>
+      </button>
+
+      <!-- Workspace View Modes (Visual & Código visible, Split hidden on mobile) -->
       <div class="mode-selector" role="radiogroup" aria-label="Modo del Editor">
         <div class="mode-tab active" data-mode="state-design" role="radio" aria-checked="true" tabindex="0">Visual</div>
-        <div class="mode-tab" data-mode="state-split" role="radio" aria-checked="false" tabindex="-1">Split</div>
+        <div class="mode-tab" data-mode="state-split" id="tab-split-mode" role="radio" aria-checked="false" tabindex="-1">Split</div>
         <div class="mode-tab" data-mode="state-source" role="radio" aria-checked="false" tabindex="-1">Código</div>
       </div>
 
-      <!-- Global Settings Hub Trigger -->
+      <!-- Global Settings Hub Trigger (Always visible) -->
       <button id="btn-global-settings" class="action-btn icon-only" title="Ajustes del Sistema (Moed Suite)" style="border-color: rgba(168, 85, 247, 0.25); color: #cbd5e1; margin-right: 2px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;stroke: currentColor;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      </button>
-
-      <!-- Theme Switcher -->
-      <button id="theme-toggle" class="action-btn icon-only" title="Cambiar Tema (Claro/Oscuro)">
-        <svg id="theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true" style="stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-        <svg id="theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true" class="hidden" style="stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
       </button>
     </div>
   </header>
 
   <!-- Dedicated Text Formatting & Tools Bar -->
   <div id="formatting-bar" class="format-control">
-    <div class="formatting-container">
+    <!-- Main Row: Always visible on mobile (AI + Meta + Aa toggle) -->
+    <div class="formatting-container formatting-main-row">
+      <!-- Mobile Aa toggle button to reveal formatting drawer -->
+      <button class="action-btn" id="btn-format-toggle" title="Mostrar/Ocultar herramientas de formato" aria-label="Formato">
+        <svg viewBox="0 0 24 24" aria-hidden="true" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;"><path d="M4 7V4h16v3"/><path d="M9 20h6M12 4v16"/></svg>
+        <span class="btn-label" style="font-weight:700;">Aa</span>
+      </button>
+
+      <!-- AI & Meta Toggles -->
+      <div class="button-group">
+        <button class="action-btn" id="btn-frontmatter" title="Editar Metadatos (YAML Frontmatter)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke:var(--accent-future);"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+          <span class="btn-label" style="color:var(--accent-future);font-weight:600;">Meta</span>
+        </button>
+      </div>
+
+      <div class="button-group">
+        <button class="action-btn" id="btn-magic-ai" title="Completar y Pulir con IA" style="border-color: rgba(139, 92, 246, 0.45); background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%); color: #e9d5ff; font-weight: 700; box-shadow: 0 0 12px rgba(168, 85, 247, 0.15);">
+          <span class="btn-ai-badge" aria-hidden="true">IA</span>
+          <span class="btn-label">Completar</span>
+        </button>
+        <button class="action-btn" id="btn-fix-spelling" title="Corregir Ortografía y Gramática con IA" style="border-color: rgba(16, 185, 129, 0.45); background: rgba(16, 185, 129, 0.05); color: #a7f3d0; font-weight: 700; box-shadow: 0 0 12px rgba(16, 185, 129, 0.1);">
+          <span class="btn-ai-badge" aria-hidden="true" style="background: rgba(16,185,129,0.25); color: #6ee7b7; border-color: rgba(16,185,129,0.4);">IA</span>
+          <span class="btn-label">Corregir</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Format Drawer: Hidden on mobile, revealed by Aa toggle -->
+    <div class="formatting-container" id="format-tools-drawer">
       <!-- History Actions -->
       <div class="button-group">
         <button class="action-btn icon-only" id="btn-undo" title="Deshacer (Ctrl+Z)">
@@ -138,25 +195,6 @@
           <span class="btn-label">Col →</span>
         </button>
       </div>
-
-      <!-- AI & Meta Toggles -->
-      <div class="button-group">
-        <button class="action-btn" id="btn-frontmatter" title="Editar Metadatos (YAML Frontmatter)">
-          <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke:var(--accent-future);"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
-          <span class="btn-label" style="color:var(--accent-future);font-weight:600;">Metadatos</span>
-        </button>
-      </div>
-
-      <div class="button-group">
-        <button class="action-btn" id="btn-magic-ai" title="✨ Completar y Pulir con IA" style="border-color: rgba(139, 92, 246, 0.45); background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%); color: #e9d5ff; font-weight: 700; box-shadow: 0 0 12px rgba(168, 85, 247, 0.15);">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;stroke:currentColor;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-          <span class="btn-label">✨ Completar con IA</span>
-        </button>
-        <button class="action-btn" id="btn-fix-spelling" title="✍️ Corregir Ortografía y Gramática con IA" style="border-color: rgba(16, 185, 129, 0.45); background: rgba(16, 185, 129, 0.05); color: #a7f3d0; font-weight: 700; box-shadow: 0 0 12px rgba(16, 185, 129, 0.1);">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;stroke:currentColor;"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-          <span class="btn-label">✍️ Corregir con IA</span>
-        </button>
-      </div>
     </div>
   </div>
 
@@ -167,9 +205,9 @@
         Metadatos del Artículo
         <span class="badge">YAML Frontmatter</span>
       </span>
-      <button class="action-btn" id="btn-frontmatter-ai" title="✨ Autocompletar metadatos y borrador" style="padding: 5px 10px; font-size: 11px; border-color: rgba(139, 92, 246, 0.4); background: rgba(139, 92, 246, 0.1); color: #e9d5ff; font-weight: 600;">
+      <button class="action-btn" id="btn-frontmatter-ai" title="Autocompletar metadatos y borrador" style="padding: 5px 10px; font-size: 11px; border-color: rgba(139, 92, 246, 0.4); background: rgba(139, 92, 246, 0.1); color: #e9d5ff; font-weight: 600;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 12px; height: 12px; margin-right: 4px; stroke: currentColor;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-        <span>✨ Completar con IA</span>
+        <span>Completar con IA</span>
       </button>
     </div>
     <div class="panel-grid">
@@ -429,5 +467,34 @@
       </span>
     </div>
   </footer>
+
+  <!-- Mobile Dropdown Toggle Handler -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const moreBtn = document.getElementById('btn-more-actions');
+      const moreMenu = document.getElementById('more-actions-menu');
+      if (moreBtn && moreMenu) {
+        moreBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          moreMenu.classList.toggle('active');
+        });
+        document.addEventListener('click', (e) => {
+          if (!moreMenu.contains(e.target) && !moreBtn.contains(e.target)) {
+            moreMenu.classList.remove('active');
+          }
+        });
+      }
+
+      // Aa format drawer toggle (mobile)
+      const formatToggleBtn = document.getElementById('btn-format-toggle');
+      const formatDrawer = document.getElementById('format-tools-drawer');
+      if (formatToggleBtn && formatDrawer) {
+        formatToggleBtn.addEventListener('click', () => {
+          formatDrawer.classList.toggle('open');
+          formatToggleBtn.classList.toggle('active');
+        });
+      }
+    });
+  </script>
 </body>
 </html>
