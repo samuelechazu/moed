@@ -1,5 +1,5 @@
 ---
-title: "Cuidarse en tener bebés es biblico?"
+title: "¿Cuidarse en tener bebés es biblico?"
 author: "Comunidad Moed"
 date: "2026-05-23"
 category: "futuro"
